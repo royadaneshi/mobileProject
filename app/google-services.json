@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "337637958475",
+    "project_id": "dic3-ef89a",
+    "storage_bucket": "dic3-ef89a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337637958475:android:89281397cee2ab7f35bece",
+        "android_client_info": {
+          "package_name": "com.edufire.dic3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337637958475-3cs9iei7ngmaek6rininl1sebei0sevn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqR9UqCaDE2kuzf6Bgrbd2gDbObu_GqTk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337637958475-3cs9iei7ngmaek6rininl1sebei0sevn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
