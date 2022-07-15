@@ -10,6 +10,8 @@ import com.edufire.dic3.Models.APIResponse;
 import com.edufire.dic3.Models.Definitions;
 import com.edufire.dic3.Models.Meanings;
 import com.edufire.dic3.Models.Phonetics;
+import com.edufire.dic3.Models.User;
+import com.edufire.dic3.Models.Word;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
@@ -18,6 +20,7 @@ import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslateLanguag
 import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslator;
 import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslatorOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -27,6 +30,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        User user = new User("Yaghi", "5555", new ArrayList<Word>());
+        UserDataBase userDataBase = new UserDataBase();
+        userDataBase.add(user);
 
         System.out.println(translateText(getLanguageCode("English"), getLanguageCode("Belarusian"), "dream"));
 
