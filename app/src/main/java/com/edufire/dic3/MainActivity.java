@@ -11,6 +11,7 @@ import com.edufire.dic3.Models.APIResponse;
 import com.edufire.dic3.Models.Definitions;
 import com.edufire.dic3.Models.Meanings;
 import com.edufire.dic3.Models.Phonetics;
+import com.edufire.dic3.Models.Word;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
@@ -31,14 +32,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
         UserDataBase userDataBase = new UserDataBase(MainActivity.this);
         searchWordsDAO = new DBHelper(MainActivity.this);
-        searchWordsDAO.insertData("Yaghi", "1234", "Hello","", "","", "","", "","", "","", "", "");
 
         System.out.println(translateText(getLanguageCode("English"), getLanguageCode("Belarusian"), "dream"));
-
 
         RequestManager requestManager = new RequestManager(MainActivity.this);
         requestManager.getWordMeaning(listener, "hello");//put input word instead of 'hello'

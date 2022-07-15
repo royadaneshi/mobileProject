@@ -7,8 +7,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.Nullable;
+
+import com.edufire.dic3.Models.Word;
+
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DBName = "UserAndSearchWords";
@@ -54,42 +56,44 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void deleteData(String user, String password, String word){
-        if(getDataFromDataBase(user, password, word) != null) {
+        if(getDataFromDataBase(user, password) != null) {
             SQLiteDatabase db = getWritableDatabase();
             db.execSQL("DELETE FROM WeatherInfo WHERE user " + "=\"" + user + "\" AND password " + "=\"" + password + "\" AND word " + "=\"" + word + "\";");
         }
     }
 
-    public ArrayList<String> getDataFromDataBase(String user, String password, String word) {
-        ArrayList<String> UserSearchWords = new ArrayList<>();
+    public ArrayList<Word> getDataFromDataBase(String user, String password) {
+        ArrayList<Word> UserSearchWords = new ArrayList<>();
+
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursorCourses = db.rawQuery("select * from searchWords", null);
 
         if (cursorCourses.moveToFirst()) {
             do {
-                if (cursorCourses.getString(0).equals(user) &&
-                        cursorCourses.getString(1).equals(password) &&
-                        cursorCourses.getString(2).equals(word)) {
-                    UserSearchWords.add(cursorCourses.getString(2));
-                    UserSearchWords.add(cursorCourses.getString(3));
-                    UserSearchWords.add(cursorCourses.getString(4));
-                    UserSearchWords.add(cursorCourses.getString(5));
-                    UserSearchWords.add(cursorCourses.getString(6));
-                    UserSearchWords.add(cursorCourses.getString(7));
-                    UserSearchWords.add(cursorCourses.getString(8));
-                    UserSearchWords.add(cursorCourses.getString(9));
-                    UserSearchWords.add(cursorCourses.getString(10));
-                    UserSearchWords.add(cursorCourses.getString(11));
-                    UserSearchWords.add(cursorCourses.getString(12));
-                    UserSearchWords.add(cursorCourses.getString(13));
-                    return UserSearchWords;
+                if (cursorCourses.getString(0).equals(user) && cursorCourses.getString(1).equals(password)) {
+                    String word = cursorCourses.getString(2);
+                    String audioLink = cursorCourses.getString(6);
+                    String description = cursorCourses.getString(7);
+                    String roleOfWordInSentence = cursorCourses.getString(9);
+                    ArrayList<String> examples = new ArrayList<>();
+                    examples.add(cursorCourses.getString(8));
+                    ArrayList<String> meaning = new ArrayList<>();
+                    ArrayList<String> synonyms = new ArrayList<>();
+                    for (int i = 0; i < 3; i++) {
+                        if(cursorCourses.getString(3 + i) != null)
+                            meaning.add(cursorCourses.getString(3 + i));
+                        if(cursorCourses.getString(10 + i) != null)
+                            synonyms.add(cursorCourses.getString(3 + i));
+                    }
+                    UserSearchWords.add(new Word(word, meaning, audioLink, description, examples, roleOfWordInSentence, synonyms));
                 }
             } while (cursorCourses.moveToNext());
         }
         cursorCourses.close();
-
-        return null;
+        if(UserSearchWords.size() == 0)
+            return null;
+        return UserSearchWords;
     }
 
 }
