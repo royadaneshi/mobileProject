@@ -31,7 +31,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        User user = new User("Yaghi", "5555", new ArrayList<Word>());
+        User user = new User("Yeganeh", "5555");
+        user.setLimitRequestCounterIncrease();
+        user.setLimitRequestCounterIncrease();
+        user.setLimitRequestCounterIncrease();
+
+
         UserDataBase userDataBase = new UserDataBase();
         userDataBase.add(user);
 

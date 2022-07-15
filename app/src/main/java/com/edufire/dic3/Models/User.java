@@ -8,14 +8,15 @@ public class User {
     String username;//unique for each user
     String password;
     int limitRequestCounter;
-    ArrayList<Word> searchWord = new ArrayList<>();
+    ArrayList<Word> searchWord;
     static HashMap<String, User> allUsers = new HashMap<>();
 
 
-    public User(String username, String password, ArrayList<Word> searchWord) {
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.searchWord = searchWord;
+        limitRequestCounter = 0;
+        allUsers.put(username, this);
     }
 
     public void setLimitRequestCounterIncrease() {
