@@ -47,6 +47,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation platform('com.google.cloud:libraries-bom:25.4.0')
-
+    implementation 'com.google.code.gson:gson:2.9.0'
 
 }

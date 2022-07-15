@@ -3,6 +3,7 @@ package com.edufire.dic3;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -10,8 +11,6 @@ import com.edufire.dic3.Models.APIResponse;
 import com.edufire.dic3.Models.Definitions;
 import com.edufire.dic3.Models.Meanings;
 import com.edufire.dic3.Models.Phonetics;
-import com.edufire.dic3.Models.User;
-import com.edufire.dic3.Models.Word;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
@@ -20,25 +19,23 @@ import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslateLanguag
 import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslator;
 import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslatorOptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
 
+    @SuppressLint("StaticFieldLeak")
+    public  static DBHelper searchWordsDAO;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        User user = new User("Yeganeh", "5555");
-        user.setLimitRequestCounterIncrease();
-        user.setLimitRequestCounterIncrease();
-        user.setLimitRequestCounterIncrease();
 
 
-        UserDataBase userDataBase = new UserDataBase();
-        userDataBase.add(user);
+        UserDataBase userDataBase = new UserDataBase(MainActivity.this);
+        searchWordsDAO = new DBHelper(MainActivity.this);
+        searchWordsDAO.insertData("Yaghi", "1234", "Hello","", "","", "","", "","", "","", "", "");
 
         System.out.println(translateText(getLanguageCode("English"), getLanguageCode("Belarusian"), "dream"));
 

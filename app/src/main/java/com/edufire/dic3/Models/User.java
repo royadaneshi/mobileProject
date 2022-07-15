@@ -9,6 +9,11 @@ public class User {
     String password;
     int limitRequestCounter;
     ArrayList<Word> searchWord;
+
+    public int getLimitRequestCounter() {
+        return limitRequestCounter;
+    }
+
     static HashMap<String, User> allUsers = new HashMap<>();
 
 
