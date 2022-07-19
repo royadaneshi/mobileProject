@@ -1,0 +1,132 @@
+Index: app/src/main/java/com/edufire/dic3/Models/User.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.edufire.dic3.Models;\r\n\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.HashMap;\r\n\r\npublic class User {\r\n    String username;//unique for each user\r\n    String password;\r\n    int limitRequestCounter;\r\n    ArrayList<Word> searchWord;\r\n\r\n    public int getLimitRequestCounter() {\r\n        return limitRequestCounter;\r\n    }\r\n\r\n    static HashMap<String, User> allUsers = new HashMap<>();\r\n\r\n\r\n    public User(String username, String password) {\r\n        this.username = username;\r\n        this.password = password;\r\n        limitRequestCounter = 0;\r\n        allUsers.put(username, this);\r\n    }\r\n\r\n    public void setLimitRequestCounterIncrease() {\r\n        limitRequestCounter++;\r\n    }\r\n\r\n    public void setUsername(String username) {\r\n        this.username = username;\r\n    }\r\n\r\n    public void setPassword(String password) {\r\n        this.password = password;\r\n    }\r\n\r\n    public String getUsername() {\r\n        return username;\r\n    }\r\n\r\n    public String getPassword() {\r\n        return password;\r\n    }\r\n\r\n    public static HashMap<String, User> getAllUsers() {\r\n        return allUsers;\r\n    }\r\n\r\n    public ArrayList<Word> getSearchWord() {\r\n        return searchWord;\r\n    }\r\n\r\n    public void setSearchWord(ArrayList<Word> searchWord) {\r\n        this.searchWord = searchWord;\r\n    }\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/edufire/dic3/Models/User.java b/app/src/main/java/com/edufire/dic3/Models/User.java
+--- a/app/src/main/java/com/edufire/dic3/Models/User.java	(revision d11b3d9355855f3073185a150485be856f5df26b)
++++ b/app/src/main/java/com/edufire/dic3/Models/User.java	(date 1657904420907)
+@@ -8,7 +8,7 @@
+     String username;//unique for each user
+     String password;
+     int limitRequestCounter;
+-    ArrayList<Word> searchWord;
++    ArrayList<Word> searchWord = new ArrayList<Word>();
+ 
+     public int getLimitRequestCounter() {
+         return limitRequestCounter;
+Index: app/src/main/java/com/edufire/dic3/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.edufire.dic3;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport android.annotation.SuppressLint;\r\nimport android.os.Bundle;\r\nimport android.widget.Toast;\r\n\r\nimport com.edufire.dic3.Models.APIResponse;\r\nimport com.edufire.dic3.Models.Definitions;\r\nimport com.edufire.dic3.Models.Meanings;\r\nimport com.edufire.dic3.Models.Phonetics;\r\nimport com.edufire.dic3.Models.Word;\r\nimport com.google.android.gms.tasks.OnFailureListener;\r\nimport com.google.android.gms.tasks.OnSuccessListener;\r\nimport com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;\r\nimport com.google.firebase.ml.naturallanguage.FirebaseNaturalLanguage;\r\nimport com.google.firebase.ml.naturallanguage.translate.FirebaseTranslateLanguage;\r\nimport com.google.firebase.ml.naturallanguage.translate.FirebaseTranslator;\r\nimport com.google.firebase.ml.naturallanguage.translate.FirebaseTranslatorOptions;\r\n\r\nimport java.util.List;\r\n\r\n\r\npublic class MainActivity extends AppCompatActivity {\r\n\r\n    @SuppressLint(\"StaticFieldLeak\")\r\n    public  static DBHelper searchWordsDAO;\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_main);\r\n\r\n        UserDataBase userDataBase = new UserDataBase(MainActivity.this);\r\n        searchWordsDAO = new DBHelper(MainActivity.this);\r\n\r\n        System.out.println(translateText(getLanguageCode(\"English\"), getLanguageCode(\"Belarusian\"), \"dream\"));\r\n\r\n        RequestManager requestManager = new RequestManager(MainActivity.this);\r\n        requestManager.getWordMeaning(listener, \"hello\");//put input word instead of 'hello'\r\n    }\r\n\r\n\r\n    public String translateText(int fromLanguageCode, int toLanguageCode, String source) {\r\n        final String[] answer = {\"\"};\r\n        FirebaseTranslatorOptions options = new FirebaseTranslatorOptions.Builder()\r\n                .setSourceLanguage(fromLanguageCode)\r\n                .setTargetLanguage(toLanguageCode)\r\n                .build();\r\n        FirebaseTranslator translator = FirebaseNaturalLanguage.getInstance().getTranslator(options);\r\n        FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions.Builder().build();\r\n        translator.downloadModelIfNeeded(conditions).addOnSuccessListener(new OnSuccessListener<Void>() {\r\n            @Override\r\n            public void onSuccess(Void unused) {\r\n                translator.translate(source).addOnSuccessListener(new OnSuccessListener<String>() {\r\n                    @Override\r\n                    public void onSuccess(String s) {\r\n                        System.out.println(s);\r\n                        answer[0] = s;\r\n                    }\r\n                }).addOnFailureListener(new OnFailureListener() {\r\n                    @Override\r\n                    public void onFailure(@NonNull Exception e) {\r\n                        System.out.println(\"Failed to translate\");\r\n                    }\r\n                });\r\n            }\r\n        }).addOnFailureListener(new OnFailureListener() {\r\n            @Override\r\n            public void onFailure(@NonNull Exception e) {\r\n                System.out.println(\"Fail to download the model!++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\");\r\n            }\r\n        });\r\n        return answer[0];\r\n    }\r\n\r\n    public int getLanguageCode(String language) {\r\n        int languageCode;\r\n        switch (language) {\r\n            case \"English\":\r\n                languageCode = FirebaseTranslateLanguage.EN;\r\n                break;\r\n            case \"Afrikaans\":\r\n                languageCode = FirebaseTranslateLanguage.AF;\r\n                break;\r\n            case \"Arabic\":\r\n                languageCode = FirebaseTranslateLanguage.AR;\r\n                break;\r\n            case \"Belarusian\":\r\n                languageCode = FirebaseTranslateLanguage.BE;\r\n                break;\r\n            case \"Czech\":\r\n                languageCode = FirebaseTranslateLanguage.CS;\r\n                break;\r\n            case \"Hindi\":\r\n                languageCode = FirebaseTranslateLanguage.HI;\r\n                break;\r\n            default:\r\n                languageCode = 0;\r\n        }\r\n        return languageCode;\r\n    }\r\n\r\n\r\n    private final OnFetchDataListener listener = new OnFetchDataListener() {\r\n        @Override\r\n        public void onFetchData(APIResponse apiResponse, String message) {\r\n            if (apiResponse == null) {\r\n                Toast.makeText(MainActivity.this, \"No data found!\", Toast.LENGTH_SHORT).show();\r\n                return;\r\n            }\r\n            showData(apiResponse);\r\n        }\r\n\r\n        @Override\r\n        public void onError(String message) {\r\n            Toast.makeText(MainActivity.this, \"Error!\", Toast.LENGTH_SHORT).show();\r\n        }\r\n    };\r\n\r\n\r\n    // we have definition , PartOfSpeech , example , synonyms ,antonyms ,phonetics's text and audio link from the api response\r\n    private void showData(APIResponse apiResponse) {\r\n        System.out.println(\"----------------------------------------------------------------------------------------------------\");\r\n\r\n        System.out.println(apiResponse.getWord());\r\n\r\n        List<Meanings> meaningsList = apiResponse.getMeanings();\r\n\r\n        for (int i = 0; i < meaningsList.size(); i++) {\r\n            System.out.println(\"PartOfSpeech: \" + meaningsList.get(i).getPartOfSpeech());\r\n            List<Definitions> definitionsList = meaningsList.get(i).getDefinitions();\r\n            for (int j = 0; j < definitionsList.size(); j++) {\r\n                System.out.println(\"Definition: \" + definitionsList.get(j).getDefinition());\r\n                System.out.println(\"Example: \" + definitionsList.get(j).getExample());\r\n                List<String> synonyms = definitionsList.get(j).getSynonyms();\r\n                List<String> antonyms = definitionsList.get(j).getAntonyms();\r\n                for (int k = 0; k < synonyms.size(); k++) {\r\n                    System.out.println(\"synonyms: \" + synonyms.get(k));\r\n                }\r\n                for (int k = 0; k < antonyms.size(); k++) {\r\n                    System.out.println(\"antonyms: \" + antonyms.get(k));\r\n                }\r\n            }\r\n        }\r\n\r\n        List<Phonetics> phonetics = apiResponse.getPhonetics();\r\n        for (int i = 0; i < phonetics.size(); i++) {\r\n            System.out.println(\"phonetics's text: \" + phonetics.get(i).getText());\r\n            System.out.println(\"Audio link: \" + phonetics.get(i).getAudio());\r\n\r\n\r\n        }\r\n        System.out.println(\"----------------------------------------------------------------------------------------------------\\n\");\r\n\r\n\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/edufire/dic3/MainActivity.java b/app/src/main/java/com/edufire/dic3/MainActivity.java
+--- a/app/src/main/java/com/edufire/dic3/MainActivity.java	(revision d11b3d9355855f3073185a150485be856f5df26b)
++++ b/app/src/main/java/com/edufire/dic3/MainActivity.java	(date 1657904945072)
+@@ -11,6 +11,7 @@
+ import com.edufire.dic3.Models.Definitions;
+ import com.edufire.dic3.Models.Meanings;
+ import com.edufire.dic3.Models.Phonetics;
++import com.edufire.dic3.Models.User;
+ import com.edufire.dic3.Models.Word;
+ import com.google.android.gms.tasks.OnFailureListener;
+ import com.google.android.gms.tasks.OnSuccessListener;
+@@ -33,6 +34,8 @@
+         setContentView(R.layout.activity_main);
+ 
+         UserDataBase userDataBase = new UserDataBase(MainActivity.this);
++        userDataBase.add(new User("r", "444"));
++        //userDataBase.countUser();
+         searchWordsDAO = new DBHelper(MainActivity.this);
+ 
+         System.out.println(translateText(getLanguageCode("English"), getLanguageCode("Belarusian"), "dream"));
+Index: app/src/main/java/com/edufire/dic3/UserDataBase.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.edufire.dic3;\r\n\r\nimport android.content.Context;\r\nimport android.widget.Toast;\r\n\r\nimport androidx.annotation.NonNull;\r\n\r\nimport com.edufire.dic3.Models.User;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.firebase.database.DataSnapshot;\r\nimport com.google.firebase.database.DatabaseError;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\nimport com.google.firebase.database.ValueEventListener;\r\n\r\nimport java.util.HashMap;\r\n\r\npublic class UserDataBase {\r\n    private final DatabaseReference databaseReference;\r\n\r\n    public UserDataBase(Context context) {\r\n        FirebaseDatabase db = FirebaseDatabase.getInstance(\"https://dic3-fd99b-default-rtdb.firebaseio.com\");\r\n        databaseReference = db.getReference(User.class.getSimpleName());\r\n    }\r\n\r\n    public Task<Void> add(User user){\r\n        return databaseReference.push().setValue(user);\r\n    }\r\n\r\n    public Task<Void> update(String key, HashMap<String, Object> hashMap){\r\n        return databaseReference.child(key).updateChildren(hashMap);\r\n    }\r\n\r\n    public Task<Void> update(String key){\r\n        return databaseReference.child(key).removeValue();\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/edufire/dic3/UserDataBase.java b/app/src/main/java/com/edufire/dic3/UserDataBase.java
+--- a/app/src/main/java/com/edufire/dic3/UserDataBase.java	(revision d11b3d9355855f3073185a150485be856f5df26b)
++++ b/app/src/main/java/com/edufire/dic3/UserDataBase.java	(date 1657904945058)
+@@ -1,7 +1,6 @@
+ package com.edufire.dic3;
+ 
+ import android.content.Context;
+-import android.widget.Toast;
+ 
+ import androidx.annotation.NonNull;
+ 
+@@ -13,25 +12,57 @@
+ import com.google.firebase.database.FirebaseDatabase;
+ import com.google.firebase.database.ValueEventListener;
+ 
+-import java.util.HashMap;
+-
+ public class UserDataBase {
+     private final DatabaseReference databaseReference;
++    FirebaseDatabase db;
++    Context context;
+ 
+     public UserDataBase(Context context) {
+-        FirebaseDatabase db = FirebaseDatabase.getInstance("https://dic3-fd99b-default-rtdb.firebaseio.com");
+-        databaseReference = db.getReference(User.class.getSimpleName());
++        db = FirebaseDatabase.getInstance("https://dic3-fd99b-default-rtdb.firebaseio.com");
++        databaseReference = db.getReference("User Information");
++        this.context = context;
+     }
+ 
+-    public Task<Void> add(User user){
+-        return databaseReference.push().setValue(user);
+-    }
++    public void add(User user){
++        databaseReference.addValueEventListener(new ValueEventListener() {
++            @Override
++            public void onDataChange(@NonNull DataSnapshot snapshot) {
++                boolean isExist = false;
++                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
++                    String name = String.valueOf(dataSnapshot.child("Name").getValue());
++                    if(name.equals(user.getUsername()))
++                        isExist = true;
++                }
++                if(!isExist){
++                    databaseReference.push().setValue(user);
++                }
++            }
++
++            @Override
++            public void onCancelled(@NonNull DatabaseError error) {
+ 
+-    public Task<Void> update(String key, HashMap<String, Object> hashMap){
+-        return databaseReference.child(key).updateChildren(hashMap);
++            }
++        });
+     }
+ 
+-    public Task<Void> update(String key){
++    public void countUser(){
++        databaseReference.addValueEventListener(new ValueEventListener() {
++            @Override
++            public void onDataChange(@NonNull DataSnapshot snapshot) {
++                int counter = 0;
++                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
++                    counter += 1;
++                }
++            }
++
++            @Override
++            public void onCancelled(@NonNull DatabaseError error) {
++
++            }
++        });
++    }
++
++    public Task<Void> remove(String key){
+         return databaseReference.child(key).removeValue();
+     }
+ }

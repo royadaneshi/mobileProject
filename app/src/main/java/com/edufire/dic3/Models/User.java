@@ -8,7 +8,7 @@ public class User {
     String username;//unique for each user
     String password;
     int limitRequestCounter;
-    ArrayList<Word> searchWord;
+    ArrayList<Word> searchWord = new ArrayList<Word>();
 
     public int getLimitRequestCounter() {
         return limitRequestCounter;
