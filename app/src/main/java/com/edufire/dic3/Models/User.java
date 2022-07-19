@@ -23,7 +23,11 @@ public class User {
         allUsers.put(username, this);
     }
 
-    public void setLimitRequestCounterIncrease() {
+    public void setLimitRequestCounter(int limitRequestCounter) {
+        this.limitRequestCounter = limitRequestCounter;
+    }
+
+    public void increaseLimitRequestCounter() {
         limitRequestCounter++;
     }
 

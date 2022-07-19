@@ -60,47 +60,40 @@ public class MainActivity extends AppCompatActivity {
         adminUsers.put("amir", "amir123");
         adminUsers.put("ali", "ali123");
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("ResourceType")
-            @Override
-            public void onClick(View view) {
-                String username = txtUsername.getText().toString();
-                String password = txtPassword.getText().toString();
+        btnLogin.setOnClickListener(view -> {
+            String username = txtUsername.getText().toString();
+            String password = txtPassword.getText().toString();
 
-                if (adminUsers.containsKey(username)) {
-                    if (Objects.equals(adminUsers.get(username), password)) {
+            if (adminUsers.containsKey(username)) {
+                if (Objects.equals(adminUsers.get(username), password)) {
+                    Toast.makeText(getApplicationContext(), "login successfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, AdminActivity.class);
+                    intent.putExtra("userName", username);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Wrong Password", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                User user = User.getAllUsers().get(username);
+                if (user == null) {
+                    Toast.makeText(getApplicationContext(), "You don't have an account", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (user.getPassword().equals(password)) {
                         Toast.makeText(getApplicationContext(), "login successfully", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(MainActivity.this, AdminActivity.class);
+                        Intent intent = new Intent(MainActivity.this, MainMenuActivity.class);
                         intent.putExtra("userName", username);
+                        intent.putExtra("password", password);
                         startActivity(intent);
                     } else {
                         Toast.makeText(getApplicationContext(), "Wrong Password", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    User user = User.getAllUsers().get(username);
-                    if (user == null) {
-                        Toast.makeText(getApplicationContext(), "You don't have an account", Toast.LENGTH_SHORT).show();
-                    } else {
-                        if (user.getPassword().equals(password)) {
-                            Toast.makeText(getApplicationContext(), "login successfully", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(MainActivity.this, MainMenuActivity.class);
-                            intent.putExtra("userName", username);
-                            intent.putExtra("password", password);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Wrong Password", Toast.LENGTH_SHORT).show();
-                        }
                     }
                 }
             }
         });
 
-        noAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, register.class);
-                startActivity(intent);
-            }
+        noAccount.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, register.class);
+            startActivity(intent);
         });
 
 

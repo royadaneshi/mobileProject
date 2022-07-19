@@ -29,31 +29,25 @@ public class register extends AppCompatActivity {
         haveAccount = findViewById(R.id.txt_go_login);
         btnRegister = findViewById(R.id.btn_register);
 
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String username = txtUsername.getText().toString();
-                String password = txtPassword.getText().toString();
-                if(User.getAllUsers().containsKey(username)){
-                    Toast.makeText(register.this, "this username is already exists", Toast.LENGTH_SHORT).show();
-                } else {
-                    MainActivity.db.insertData(username, password, null, null, null, null, null, null, null, null, null, null, null, null);
-                    new User(username, password);
-                    Toast.makeText(register.this, "register successfully", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(register.this, MainMenuActivity.class);
-                    intent.putExtra("userName", username);
-                    intent.putExtra("password", password);
-                    startActivity(intent);
-                }
+        btnRegister.setOnClickListener(view -> {
+            String username = txtUsername.getText().toString();
+            String password = txtPassword.getText().toString();
+            if(User.getAllUsers().containsKey(username)){
+                Toast.makeText(register.this, "this username is already exists", Toast.LENGTH_SHORT).show();
+            } else {
+                MainActivity.db.insertData(username, password, null, null, null, null, null, null, null, null, null, null, null, null);
+                new User(username, password);
+                Toast.makeText(register.this, "register successfully", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(register.this, MainMenuActivity.class);
+                intent.putExtra("userName", username);
+                intent.putExtra("password", password);
+                startActivity(intent);
             }
         });
 
-        haveAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(register.this, MainActivity.class);
-                startActivity(intent);
-            }
+        haveAccount.setOnClickListener(view -> {
+            Intent intent = new Intent(register.this, MainActivity.class);
+            startActivity(intent);
         });
 
     }

@@ -66,8 +66,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public ArrayList<Word> getUserSearchWordFromDataBase(String user, String password) {
         ArrayList<Word> UserSearchWords = new ArrayList<>();
-
-
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursorCourses = db.rawQuery("select * from searchWords", null);
 
@@ -98,26 +96,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return UserSearchWords;
     }
 
-    public ArrayList<Word> findUserFromDataBase(String user, String password) {
-        ArrayList<Word> UserSearchWords = new ArrayList<>();
-
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursorCourses = db.rawQuery("select * from searchWords", null);
-
-        if (cursorCourses.moveToFirst()) {
-            do {
-                if (cursorCourses.getString(0).equals(user) && cursorCourses.getString(1).equals(password)) {
-
-                }
-            } while (cursorCourses.moveToNext());
-        }
-        cursorCourses.close();
-        if(UserSearchWords.size() == 0)
-            return null;
-        return UserSearchWords;
-    }
-
     public HashMap<String, User> getAllUserFromDataBase() {
         HashMap<String, User> allUser = new HashMap<>();
 
@@ -128,6 +106,9 @@ public class DBHelper extends SQLiteOpenHelper {
             do {
                 if(!allUser.containsKey(cursorCourses.getString(0))) {
                     User user = new User(cursorCourses.getString(0), cursorCourses.getString(1));
+                    ArrayList<Word> searched = getUserSearchWordFromDataBase(user.getUsername(), user.getPassword());
+                    user.setSearchWord(searched);
+                    user.setLimitRequestCounter(searched.size() - 1);
                     allUser.put(cursorCourses.getString(0), user);
                 }
             } while (cursorCourses.moveToNext());
