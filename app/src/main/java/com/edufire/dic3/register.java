@@ -47,5 +47,14 @@ public class register extends AppCompatActivity {
                 }
             }
         });
+
+        haveAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(register.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 }
