@@ -67,8 +67,15 @@ public class MainActivity extends AppCompatActivity {
                 String username = txtUsername.getText().toString();
                 String password = txtPassword.getText().toString();
 
-                boolean isAdmin = checkIfUserIsAdmin(username, password);
-                if (isAdmin) {
+                if (adminUsers.containsKey(username)) {
+                    if (Objects.equals(adminUsers.get(username), password)) {
+                        Toast.makeText(getApplicationContext(), "login successfully", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivity.this, AdminActivity.class);
+                        intent.putExtra("userName", username);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Wrong Password", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     User user = User.getAllUsers().get(username);
                     if (user == null) {
@@ -104,20 +111,10 @@ public class MainActivity extends AppCompatActivity {
 //        requestManager.getWordMeaning(listener, "hello");//put input word instead of 'hello'
     }
 
-    private User isUserExist(String userName) {
-        return User.getAllUsers().get(userName);
-    }
-
     private void loadData() {
         HashMap<String, User> allUser = db.getAllUserFromDataBase();
         if (allUser != null)
             User.setAllUsers(allUser);
-    }
-
-    private boolean checkIfUserIsAdmin(String username, String password) {
-        if (adminUsers.containsKey(username)) {
-            return Objects.equals(adminUsers.get(username), password);
-        } else return false;
     }
 
 
