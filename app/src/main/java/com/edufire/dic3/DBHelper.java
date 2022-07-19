@@ -8,9 +8,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.Nullable;
 
+import com.edufire.dic3.Models.User;
 import com.edufire.dic3.Models.Word;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DBName = "UserAndSearchWords";
@@ -56,13 +58,13 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void deleteData(String user, String password, String word){
-        if(getDataFromDataBase(user, password) != null) {
+        if(getUserSearchWordFromDataBase(user, password) != null) {
             SQLiteDatabase db = getWritableDatabase();
             db.execSQL("DELETE FROM WeatherInfo WHERE user " + "=\"" + user + "\" AND password " + "=\"" + password + "\" AND word " + "=\"" + word + "\";");
         }
     }
 
-    public ArrayList<Word> getDataFromDataBase(String user, String password) {
+    public ArrayList<Word> getUserSearchWordFromDataBase(String user, String password) {
         ArrayList<Word> UserSearchWords = new ArrayList<>();
 
 
@@ -94,6 +96,46 @@ public class DBHelper extends SQLiteOpenHelper {
         if(UserSearchWords.size() == 0)
             return null;
         return UserSearchWords;
+    }
+
+    public ArrayList<Word> findUserFromDataBase(String user, String password) {
+        ArrayList<Word> UserSearchWords = new ArrayList<>();
+
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursorCourses = db.rawQuery("select * from searchWords", null);
+
+        if (cursorCourses.moveToFirst()) {
+            do {
+                if (cursorCourses.getString(0).equals(user) && cursorCourses.getString(1).equals(password)) {
+
+                }
+            } while (cursorCourses.moveToNext());
+        }
+        cursorCourses.close();
+        if(UserSearchWords.size() == 0)
+            return null;
+        return UserSearchWords;
+    }
+
+    public HashMap<String, User> getAllUserFromDataBase() {
+        HashMap<String, User> allUser = new HashMap<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursorCourses = db.rawQuery("select * from searchWords", null);
+
+        if (cursorCourses.moveToFirst()) {
+            do {
+                if(!allUser.containsKey(cursorCourses.getString(0))) {
+                    User user = new User(cursorCourses.getString(0), cursorCourses.getString(1));
+                    allUser.put(cursorCourses.getString(0), user);
+                }
+            } while (cursorCourses.moveToNext());
+        }
+        cursorCourses.close();
+        if(allUser.size() == 0)
+            return null;
+        return allUser;
     }
 
 }

@@ -16,7 +16,6 @@ public class User {
 
     static HashMap<String, User> allUsers = new HashMap<>();
 
-
     public User(String username, String password) {
         this.username = username;
         this.password = password;
@@ -42,6 +41,10 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public static void setAllUsers(HashMap<String, User> allUsers) {
+        User.allUsers = allUsers;
     }
 
     public static HashMap<String, User> getAllUsers() {
