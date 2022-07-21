@@ -86,5 +86,4 @@ public class User {
         this.searchWord = searchWord;
     }
 
-
 }
