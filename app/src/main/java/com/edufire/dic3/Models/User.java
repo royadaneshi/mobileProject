@@ -38,7 +38,6 @@ public class User {
         return limitRequestCounter;
     }
 
-
     public void setUserPremium(boolean premium) {
         isPremium = premium;
     }
