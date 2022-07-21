@@ -1,14 +1,20 @@
 package com.edufire.dic3.Models;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class User {
     String username;//unique for each user
     String password;
     int limitRequestCounter;
-    static HashMap<String, User> allUsers = new HashMap<>();
+    ArrayList<Word> searchWord = new ArrayList<Word>();
 
+    public int getLimitRequestCounter() {
+        return limitRequestCounter;
+    }
+
+    static HashMap<String, User> allUsers = new HashMap<>();
 
     public User(String username, String password) {
         this.username = username;
@@ -17,7 +23,11 @@ public class User {
         allUsers.put(username, this);
     }
 
-    public void setLimitRequestCounterIncrease() {
+    public void setLimitRequestCounter(int limitRequestCounter) {
+        this.limitRequestCounter = limitRequestCounter;
+    }
+
+    public void increaseLimitRequestCounter() {
         limitRequestCounter++;
     }
 
@@ -37,8 +47,21 @@ public class User {
         return password;
     }
 
+    public static void setAllUsers(HashMap<String, User> allUsers) {
+        User.allUsers = allUsers;
+    }
+
     public static HashMap<String, User> getAllUsers() {
         return allUsers;
     }
+
+    public ArrayList<Word> getSearchWord() {
+        return searchWord;
+    }
+
+    public void setSearchWord(ArrayList<Word> searchWord) {
+        this.searchWord = searchWord;
+    }
+
 
 }

@@ -18,6 +18,7 @@ import com.edufire.dic3.Models.APIResponse;
 import com.edufire.dic3.Models.Definitions;
 import com.edufire.dic3.Models.Meanings;
 import com.edufire.dic3.Models.Phonetics;
+import com.edufire.dic3.Models.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
@@ -37,12 +38,17 @@ public class MainActivity extends AppCompatActivity {
     EditText txtPassword;
     TextView noAccount;
     Button btnLogin;
-    HashMap<String,String> adminUsers = new HashMap<>();
+    @SuppressLint("StaticFieldLeak")
+    public static DBHelper db;
+    HashMap<String, String> adminUsers = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        db = new DBHelper(MainActivity.this);
+        loadData();
 
         txtUsername = findViewById(R.id.inputUsername);
         txtPassword = findViewById(R.id.inputPassword);
@@ -50,35 +56,44 @@ public class MainActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btn_login);
 
 
+        adminUsers.put("roya", "roya123");
+        adminUsers.put("amir", "amir123");
+        adminUsers.put("ali", "ali123");
 
-        adminUsers.put("roya","roya123");
-        adminUsers.put("amir","amir123");
-        adminUsers.put("ali","ali123");
+        btnLogin.setOnClickListener(view -> {
+            String username = txtUsername.getText().toString();
+            String password = txtPassword.getText().toString();
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("ResourceType")
-            @Override
-            public void onClick(View view) {
-                String username = txtUsername.getText().toString();
-                String password = txtPassword.getText().toString();
-
-                boolean isAdmin = checkIfUserIsAdmin(username,password);
-//                if (isAdmin){
-                    //todo handle admin login
-//                }else
-                    //todo handle user login
-
-                Intent intent = new Intent(MainActivity.this,MainMenuActivity.class);
-                startActivity(intent);
+            if (adminUsers.containsKey(username)) {
+                if (Objects.equals(adminUsers.get(username), password)) {
+                    Toast.makeText(getApplicationContext(), "login successfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, AdminActivity.class);
+                    intent.putExtra("userName", username);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Wrong Password", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                User user = User.getAllUsers().get(username);
+                if (user == null) {
+                    Toast.makeText(getApplicationContext(), "You don't have an account", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (user.getPassword().equals(password)) {
+                        Toast.makeText(getApplicationContext(), "login successfully", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivity.this, MainMenuActivity.class);
+                        intent.putExtra("userName", username);
+                        intent.putExtra("password", password);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Wrong Password", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
 
-        noAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,register.class);
-                startActivity(intent);
-            }
+        noAccount.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, register.class);
+            startActivity(intent);
         });
 
 
@@ -89,10 +104,10 @@ public class MainActivity extends AppCompatActivity {
 //        requestManager.getWordMeaning(listener, "hello");//put input word instead of 'hello'
     }
 
-    private boolean checkIfUserIsAdmin(String username , String password) {
-        if (adminUsers.containsKey(username)){
-            return Objects.equals(adminUsers.get(username), password);
-        }else return false;
+    private void loadData() {
+        HashMap<String, User> allUser = db.getAllUserFromDataBase();
+        if (allUser != null)
+            User.setAllUsers(allUser);
     }
 
 
