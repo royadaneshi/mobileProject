@@ -9,7 +9,6 @@ public class User {
     int limitRequestCounter;
     boolean isPremium;
     String premiumCode;
-    int requestCounter;
     static HashMap<String, User> allUsers = new HashMap<>();
 
 
@@ -17,29 +16,25 @@ public class User {
         this.username = username;
         this.password = password;
         limitRequestCounter = 0;
-        requestCounter = 0;
         isPremium = false;
-        premiumCode="";
+        premiumCode = "";
         allUsers.put(username, this);
     }
 
 
     public void makeUserPremium(String premiumCode) {
         isPremium = true;
-        this.premiumCode =premiumCode;
+        this.premiumCode = premiumCode;
     }
 
     public boolean canUserRequest() {
-        return isPremium || (!isPremium && requestCounter <= 10);
+        return isPremium || (!isPremium && limitRequestCounter <= 10);
     }
 
-    public int getRequestCounter() {
-        return requestCounter;
+    public int getLimitRequestCounter() {
+        return limitRequestCounter;
     }
 
-    public void addOneRequestForUser() {
-        requestCounter++;
-    }
 
     public void setUserPremium() {
         isPremium = true;
