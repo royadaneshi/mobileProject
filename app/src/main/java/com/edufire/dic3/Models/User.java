@@ -29,7 +29,6 @@ public class User {
         this.premiumCode = premiumCode;
     }
 
-
     public boolean canUserRequest() {
         return isPremium || (!isPremium && limitRequestCounter <= 10);
     }
