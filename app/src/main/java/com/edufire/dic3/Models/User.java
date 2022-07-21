@@ -36,8 +36,8 @@ public class User {
     }
 
 
-    public void setUserPremium() {
-        isPremium = true;
+    public void setUserPremium(boolean premium) {
+        isPremium = premium;
     }
 
     public boolean isPremium() {
