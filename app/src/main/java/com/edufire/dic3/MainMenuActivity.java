@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.edufire.dic3.Models.User;
+
 public class MainMenuActivity extends AppCompatActivity {
 
     TextView txtSearch,txtGroups,txtPremium;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +22,11 @@ public class MainMenuActivity extends AppCompatActivity {
         txtSearch = findViewById(R.id.txt_menu_search);
         txtGroups = findViewById(R.id.txt_menu_groups);
         txtPremium = findViewById(R.id.txt_menu_premium);
+
+        String username = getIntent().getStringExtra("userName");
+        String password = getIntent().getStringExtra("password");
+
+        user = User.getAllUsers().get(username);
 
         txtSearch.setOnClickListener(new View.OnClickListener() {
             @Override

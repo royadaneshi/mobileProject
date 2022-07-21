@@ -1,0 +1,183 @@
+Index: app/src/main/java/com/edufire/dic3/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.edufire.dic3;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport android.os.Bundle;\r\nimport android.widget.Toast;\r\n\r\nimport com.edufire.dic3.Models.APIResponse;\r\nimport com.edufire.dic3.Models.Definitions;\r\nimport com.edufire.dic3.Models.Meanings;\r\nimport com.edufire.dic3.Models.Phonetics;\r\nimport com.google.android.gms.tasks.OnFailureListener;\r\nimport com.google.android.gms.tasks.OnSuccessListener;\r\nimport com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;\r\nimport com.google.firebase.ml.naturallanguage.FirebaseNaturalLanguage;\r\nimport com.google.firebase.ml.naturallanguage.translate.FirebaseTranslateLanguage;\r\nimport com.google.firebase.ml.naturallanguage.translate.FirebaseTranslator;\r\nimport com.google.firebase.ml.naturallanguage.translate.FirebaseTranslatorOptions;\r\n\r\nimport java.util.List;\r\n\r\n\r\npublic class MainActivity extends AppCompatActivity {\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_main);\r\n\r\n        System.out.println(translateText(getLanguageCode(\"English\"), getLanguageCode(\"Belarusian\"), \"dream\"));\r\n\r\n\r\n        RequestManager requestManager = new RequestManager(MainActivity.this);\r\n        requestManager.getWordMeaning(listener, \"hello\");//put input word instead of 'hello'\r\n    }\r\n\r\n\r\n    public String translateText(int fromLanguageCode, int toLanguageCode, String source) {\r\n        final String[] answer = {\"\"};\r\n        FirebaseTranslatorOptions options = new FirebaseTranslatorOptions.Builder()\r\n                .setSourceLanguage(fromLanguageCode)\r\n                .setTargetLanguage(toLanguageCode)\r\n                .build();\r\n        FirebaseTranslator translator = FirebaseNaturalLanguage.getInstance().getTranslator(options);\r\n        FirebaseModelDownloadConditions conditions = new FirebaseModelDownloadConditions.Builder().build();\r\n        translator.downloadModelIfNeeded(conditions).addOnSuccessListener(new OnSuccessListener<Void>() {\r\n            @Override\r\n            public void onSuccess(Void unused) {\r\n                translator.translate(source).addOnSuccessListener(new OnSuccessListener<String>() {\r\n                    @Override\r\n                    public void onSuccess(String s) {\r\n                        System.out.println(s);\r\n                        answer[0] = s;\r\n                    }\r\n                }).addOnFailureListener(new OnFailureListener() {\r\n                    @Override\r\n                    public void onFailure(@NonNull Exception e) {\r\n                        System.out.println(\"Failed to translate\");\r\n                    }\r\n                });\r\n            }\r\n        }).addOnFailureListener(new OnFailureListener() {\r\n            @Override\r\n            public void onFailure(@NonNull Exception e) {\r\n                System.out.println(\"Fail to download the model!++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\");\r\n            }\r\n        });\r\n        return answer[0];\r\n    }\r\n\r\n    public int getLanguageCode(String language) {\r\n        int languageCode;\r\n        switch (language) {\r\n            case \"English\":\r\n                languageCode = FirebaseTranslateLanguage.EN;\r\n                break;\r\n            case \"Afrikaans\":\r\n                languageCode = FirebaseTranslateLanguage.AF;\r\n                break;\r\n            case \"Arabic\":\r\n                languageCode = FirebaseTranslateLanguage.AR;\r\n                break;\r\n            case \"Belarusian\":\r\n                languageCode = FirebaseTranslateLanguage.BE;\r\n                break;\r\n            case \"Czech\":\r\n                languageCode = FirebaseTranslateLanguage.CS;\r\n                break;\r\n            case \"Hindi\":\r\n                languageCode = FirebaseTranslateLanguage.HI;\r\n                break;\r\n            default:\r\n                languageCode = 0;\r\n        }\r\n        return languageCode;\r\n    }\r\n\r\n\r\n    private final OnFetchDataListener listener = new OnFetchDataListener() {\r\n        @Override\r\n        public void onFetchData(APIResponse apiResponse, String message) {\r\n            if (apiResponse == null) {\r\n                Toast.makeText(MainActivity.this, \"No data found!\", Toast.LENGTH_SHORT).show();\r\n                return;\r\n            }\r\n            showData(apiResponse);\r\n        }\r\n\r\n        @Override\r\n        public void onError(String message) {\r\n            Toast.makeText(MainActivity.this, \"Error!\", Toast.LENGTH_SHORT).show();\r\n        }\r\n    };\r\n\r\n\r\n    // we have definition , PartOfSpeech , example , synonyms ,antonyms ,phonetics's text and audio link from the api response\r\n    private void showData(APIResponse apiResponse) {\r\n        System.out.println(\"----------------------------------------------------------------------------------------------------\");\r\n\r\n        System.out.println(apiResponse.getWord());\r\n\r\n        List<Meanings> meaningsList = apiResponse.getMeanings();\r\n\r\n        for (int i = 0; i < meaningsList.size(); i++) {\r\n            System.out.println(\"PartOfSpeech: \" + meaningsList.get(i).getPartOfSpeech());\r\n            List<Definitions> definitionsList = meaningsList.get(i).getDefinitions();\r\n            for (int j = 0; j < definitionsList.size(); j++) {\r\n                System.out.println(\"Definition: \" + definitionsList.get(j).getDefinition());\r\n                System.out.println(\"Example: \" + definitionsList.get(j).getExample());\r\n                List<String> synonyms = definitionsList.get(j).getSynonyms();\r\n                List<String> antonyms = definitionsList.get(j).getAntonyms();\r\n                for (int k = 0; k < synonyms.size(); k++) {\r\n                    System.out.println(\"synonyms: \" + synonyms.get(k));\r\n                }\r\n                for (int k = 0; k < antonyms.size(); k++) {\r\n                    System.out.println(\"antonyms: \" + antonyms.get(k));\r\n                }\r\n            }\r\n        }\r\n\r\n        List<Phonetics> phonetics = apiResponse.getPhonetics();\r\n        for (int i = 0; i < phonetics.size(); i++) {\r\n            System.out.println(\"phonetics's text: \" + phonetics.get(i).getText());\r\n            System.out.println(\"Audio link: \" + phonetics.get(i).getAudio());\r\n\r\n\r\n        }\r\n        System.out.println(\"----------------------------------------------------------------------------------------------------\\n\");\r\n\r\n\r\n    }\r\n\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/edufire/dic3/MainActivity.java b/app/src/main/java/com/edufire/dic3/MainActivity.java
+--- a/app/src/main/java/com/edufire/dic3/MainActivity.java	
++++ b/app/src/main/java/com/edufire/dic3/MainActivity.java	
+@@ -10,6 +10,8 @@
+ import com.edufire.dic3.Models.Definitions;
+ import com.edufire.dic3.Models.Meanings;
+ import com.edufire.dic3.Models.Phonetics;
++import com.edufire.dic3.Models.User;
++import com.edufire.dic3.Models.Word;
+ import com.google.android.gms.tasks.OnFailureListener;
+ import com.google.android.gms.tasks.OnSuccessListener;
+ import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
+@@ -18,6 +20,7 @@
+ import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslator;
+ import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslatorOptions;
+ 
++import java.util.ArrayList;
+ import java.util.List;
+ 
+ 
+@@ -28,6 +31,10 @@
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_main);
+ 
++        UserDataBase userDataBase = new UserDataBase();
++        User user = new User("Yaghi", "1234", new ArrayList<Word>());
++        userDataBase.add(user);
++
+         System.out.println(translateText(getLanguageCode("English"), getLanguageCode("Belarusian"), "dream"));
+ 
+ 
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\r\n    id 'com.android.application'\r\n    id 'com.google.gms.google-services'\r\n}\r\n\r\nandroid {\r\n    compileSdk 32\r\n\r\n    defaultConfig {\r\n        applicationId \"com.edufire.dic3\"\r\n        minSdk 21\r\n        targetSdk 32\r\n        versionCode 1\r\n        versionName \"1.0\"\r\n\r\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            minifyEnabled false\r\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\r\n        }\r\n    }\r\n    compileOptions {\r\n        sourceCompatibility JavaVersion.VERSION_1_8\r\n        targetCompatibility JavaVersion.VERSION_1_8\r\n    }\r\n}\r\n\r\ndependencies {\r\n\r\n    implementation 'androidx.appcompat:appcompat:1.4.2'\r\n    implementation 'com.google.android.material:material:1.6.1'\r\n    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'\r\n    implementation 'com.google.firebase:firebase-core:21.0.0'\r\n    implementation 'com.google.firebase:firebase-ml-natural-language:22.0.1'\r\n    implementation 'com.google.firebase:firebase-ml-natural-language-language-id-model:20.0.8'\r\n    implementation 'com.google.firebase:firebase-ml-natural-language-translate-model:20.0.9'\r\n    androidTestImplementation 'androidx.test.ext:junit:1.1.3'\r\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'\r\n\r\n    implementation 'com.squareup.retrofit2:retrofit:2.9.0'\r\n    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'\r\n    androidTestImplementation 'com.android.support.test:runner:1.0.2'\r\n    testImplementation 'junit:junit:4.13.2'\r\n    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'\r\n    implementation platform('com.google.cloud:libraries-bom:25.4.0')\r\n\r\n\r\n}
+===================================================================
+diff --git a/app/build.gradle b/app/build.gradle
+--- a/app/build.gradle	
++++ b/app/build.gradle	
+@@ -33,7 +33,7 @@
+     implementation 'androidx.appcompat:appcompat:1.4.2'
+     implementation 'com.google.android.material:material:1.6.1'
+     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+-    implementation 'com.google.firebase:firebase-core:21.0.0'
++    implementation 'com.google.firebase:firebase-core:21.1.0'
+     implementation 'com.google.firebase:firebase-ml-natural-language:22.0.1'
+     implementation 'com.google.firebase:firebase-ml-natural-language-language-id-model:20.0.8'
+     implementation 'com.google.firebase:firebase-ml-natural-language-translate-model:20.0.9'
+@@ -47,5 +47,9 @@
+     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+     implementation platform('com.google.cloud:libraries-bom:25.4.0')
+ 
++    implementation 'com.google.firebase:firebase-database'
++    implementation 'com.google.firebase:firebase-database:20.0.5'
++
++
+ 
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/edufire/dic3/Models/User.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.edufire.dic3.Models;\r\n\r\n\r\nimport java.util.HashMap;\r\n\r\npublic class User {\r\n    String username;//unique for each user\r\n    String password;\r\n    int limitRequestCounter;\r\n    static HashMap<String, User> allUsers = new HashMap<>();\r\n\r\n\r\n    public User(String username, String password) {\r\n        this.username = username;\r\n        this.password = password;\r\n        limitRequestCounter = 0;\r\n        allUsers.put(username, this);\r\n    }\r\n\r\n    public void setLimitRequestCounterIncrease() {\r\n        limitRequestCounter++;\r\n    }\r\n\r\n    public void setUsername(String username) {\r\n        this.username = username;\r\n    }\r\n\r\n    public void setPassword(String password) {\r\n        this.password = password;\r\n    }\r\n\r\n    public String getUsername() {\r\n        return username;\r\n    }\r\n\r\n    public String getPassword() {\r\n        return password;\r\n    }\r\n\r\n    public static HashMap<String, User> getAllUsers() {\r\n        return allUsers;\r\n    }\r\n\r\n}\r\n
+===================================================================
+diff --git a/app/src/main/java/com/edufire/dic3/Models/User.java b/app/src/main/java/com/edufire/dic3/Models/User.java
+--- a/app/src/main/java/com/edufire/dic3/Models/User.java	
++++ b/app/src/main/java/com/edufire/dic3/Models/User.java	
+@@ -1,19 +1,21 @@
+ package com.edufire.dic3.Models;
+ 
+ 
++import java.util.ArrayList;
+ import java.util.HashMap;
+ 
+ public class User {
+     String username;//unique for each user
+     String password;
+     int limitRequestCounter;
++    ArrayList<Word> userSearchWord = new ArrayList<>();
+     static HashMap<String, User> allUsers = new HashMap<>();
+ 
+-
+-    public User(String username, String password) {
++    public User(String username, String password, ArrayList<Word> userSearchWord) {
+         this.username = username;
+         this.password = password;
+         limitRequestCounter = 0;
++        this.userSearchWord = userSearchWord;
+         allUsers.put(username, this);
+     }
+ 
+@@ -37,6 +39,14 @@
+         return password;
+     }
+ 
++    public ArrayList<Word> getUserSearchWord() {
++        return userSearchWord;
++    }
++
++    public void setUserSearchWord(ArrayList<Word> userSearchWord) {
++        this.userSearchWord = userSearchWord;
++    }
++
+     public static HashMap<String, User> getAllUsers() {
+         return allUsers;
+     }
+Index: app/google-services.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\r\n  \"project_info\": {\r\n    \"project_number\": \"337637958475\",\r\n    \"project_id\": \"dic3-ef89a\",\r\n    \"storage_bucket\": \"dic3-ef89a.appspot.com\"\r\n  },\r\n  \"client\": [\r\n    {\r\n      \"client_info\": {\r\n        \"mobilesdk_app_id\": \"1:337637958475:android:89281397cee2ab7f35bece\",\r\n        \"android_client_info\": {\r\n          \"package_name\": \"com.edufire.dic3\"\r\n        }\r\n      },\r\n      \"oauth_client\": [\r\n        {\r\n          \"client_id\": \"337637958475-3cs9iei7ngmaek6rininl1sebei0sevn.apps.googleusercontent.com\",\r\n          \"client_type\": 3\r\n        }\r\n      ],\r\n      \"api_key\": [\r\n        {\r\n          \"current_key\": \"AIzaSyAqR9UqCaDE2kuzf6Bgrbd2gDbObu_GqTk\"\r\n        }\r\n      ],\r\n      \"services\": {\r\n        \"appinvite_service\": {\r\n          \"other_platform_oauth_client\": [\r\n            {\r\n              \"client_id\": \"337637958475-3cs9iei7ngmaek6rininl1sebei0sevn.apps.googleusercontent.com\",\r\n              \"client_type\": 3\r\n            }\r\n          ]\r\n        }\r\n      }\r\n    }\r\n  ],\r\n  \"configuration_version\": \"1\"\r\n}
+===================================================================
+diff --git a/app/google-services.json b/app/google-services.json
+--- a/app/google-services.json	
++++ b/app/google-services.json	
+@@ -1,33 +1,41 @@
+ {
+   "project_info": {
+-    "project_number": "337637958475",
+-    "project_id": "dic3-ef89a",
+-    "storage_bucket": "dic3-ef89a.appspot.com"
++    "project_number": "904074334814",
++    "project_id": "dic3-fd99b",
++    "storage_bucket": "dic3-fd99b.appspot.com"
+   },
+   "client": [
+     {
+       "client_info": {
+-        "mobilesdk_app_id": "1:337637958475:android:89281397cee2ab7f35bece",
++        "mobilesdk_app_id": "1:904074334814:android:5ce1e928d0711a59b31acf",
+         "android_client_info": {
+           "package_name": "com.edufire.dic3"
+         }
+       },
+       "oauth_client": [
+         {
+-          "client_id": "337637958475-3cs9iei7ngmaek6rininl1sebei0sevn.apps.googleusercontent.com",
++          "client_id": "904074334814-12u40em1932cfr7t3g5neov5stt148qh.apps.googleusercontent.com",
++          "client_type": 1,
++          "android_info": {
++            "package_name": "com.edufire.dic3",
++            "certificate_hash": "6936a450ecb4eca0eb53aa2efce32bf8a35484ff"
++          }
++        },
++        {
++          "client_id": "904074334814-01i8vqmgrklobqhbjqlt3r1g1ahib7gf.apps.googleusercontent.com",
+           "client_type": 3
+         }
+       ],
+       "api_key": [
+         {
+-          "current_key": "AIzaSyAqR9UqCaDE2kuzf6Bgrbd2gDbObu_GqTk"
++          "current_key": "AIzaSyBF2BbKPn8QwDbW116Vp8POlN_5-n0934s"
+         }
+       ],
+       "services": {
+         "appinvite_service": {
+           "other_platform_oauth_client": [
+             {
+-              "client_id": "337637958475-3cs9iei7ngmaek6rininl1sebei0sevn.apps.googleusercontent.com",
++              "client_id": "904074334814-01i8vqmgrklobqhbjqlt3r1g1ahib7gf.apps.googleusercontent.com",
+               "client_type": 3
+             }
+           ]
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"GRADLE\" />\r\n        <option name=\"distributionType\" value=\"DEFAULT_WRAPPED\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"gradleHome\" value=\"$USER_HOME$/Downloads/gradle-6.9.2-all/gradle-6.9.2\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+===================================================================
+diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+--- a/.idea/gradle.xml	
++++ b/.idea/gradle.xml	
+@@ -1,5 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
++  <component name="GradleMigrationSettings" migrationVersion="1" />
+   <component name="GradleSettings">
+     <option name="linkedExternalProjectsSettings">
+       <GradleProjectSettings>

@@ -1,50 +1,33 @@
 package com.edufire.dic3.Models;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class User {
     String username;//unique for each user
     String password;
     int limitRequestCounter;
-    boolean isPremium;
-    String premiumCode;
-    static HashMap<String, User> allUsers = new HashMap<>();
-
-
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-        limitRequestCounter = 0;
-        isPremium = false;
-        premiumCode = "";
-        allUsers.put(username, this);
-    }
-
-
-    public void makeUserPremium(String premiumCode) {
-        isPremium = true;
-        this.premiumCode = premiumCode;
-    }
-
-    public boolean canUserRequest() {
-        return isPremium || (!isPremium && limitRequestCounter <= 10);
-    }
+    ArrayList<Word> searchWord = new ArrayList<Word>();
 
     public int getLimitRequestCounter() {
         return limitRequestCounter;
     }
 
+    static HashMap<String, User> allUsers = new HashMap<>();
 
-    public void setUserPremium(boolean premium) {
-        isPremium = premium;
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+        limitRequestCounter = 0;
+        allUsers.put(username, this);
     }
 
-    public boolean isPremium() {
-        return isPremium;
+    public void setLimitRequestCounter(int limitRequestCounter) {
+        this.limitRequestCounter = limitRequestCounter;
     }
 
-    public void setLimitRequestCounterIncrease() {
+    public void increaseLimitRequestCounter() {
         limitRequestCounter++;
     }
 
@@ -64,8 +47,21 @@ public class User {
         return password;
     }
 
+    public static void setAllUsers(HashMap<String, User> allUsers) {
+        User.allUsers = allUsers;
+    }
+
     public static HashMap<String, User> getAllUsers() {
         return allUsers;
     }
+
+    public ArrayList<Word> getSearchWord() {
+        return searchWord;
+    }
+
+    public void setSearchWord(ArrayList<Word> searchWord) {
+        this.searchWord = searchWord;
+    }
+
 
 }
