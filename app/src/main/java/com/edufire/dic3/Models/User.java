@@ -8,11 +8,9 @@ public class User {
     String username;//unique for each user
     String password;
     int limitRequestCounter;
+    boolean isPremium;
+    String premiumCode;
     ArrayList<Word> searchWord = new ArrayList<Word>();
-
-    public int getLimitRequestCounter() {
-        return limitRequestCounter;
-    }
 
     static HashMap<String, User> allUsers = new HashMap<>();
 
@@ -20,7 +18,32 @@ public class User {
         this.username = username;
         this.password = password;
         limitRequestCounter = 0;
+        isPremium = false;
+        premiumCode = "";
         allUsers.put(username, this);
+
+    }
+
+    public void makeUserPremium(String premiumCode) {
+        isPremium = true;
+        this.premiumCode = premiumCode;
+    }
+
+    public boolean canUserRequest() {
+        return isPremium || (!isPremium && limitRequestCounter <= 10);
+    }
+
+    public int getLimitRequestCounter() {
+        return limitRequestCounter;
+    }
+
+
+    public void setUserPremium(boolean premium) {
+        isPremium = premium;
+    }
+
+    public boolean isPremium() {
+        return isPremium;
     }
 
     public void setLimitRequestCounter(int limitRequestCounter) {
