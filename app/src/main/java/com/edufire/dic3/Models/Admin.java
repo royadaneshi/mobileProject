@@ -19,6 +19,7 @@ public class Admin extends User {
     public void acceptRequest(PremiumRequest premiumRequest) {
         premiumRequest.setStatus(Status.Accepted);
         premiumRequest.getUser().setUserPremium(true);
+        premiumRequest.getUser().makeUserPremium(premiumRequest.getPremiumCode());
 
     }
 
