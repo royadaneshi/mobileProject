@@ -11,7 +11,7 @@ import com.edufire.dic3.Models.User;
 
 public class MainMenuActivity extends AppCompatActivity {
 
-    TextView txtSearch,txtGroups,txtPremium;
+    TextView txtSearch,txtGroups,txtPremium, txtPlayGame;
     User user;
 
     @Override
@@ -22,6 +22,7 @@ public class MainMenuActivity extends AppCompatActivity {
         txtSearch = findViewById(R.id.txt_menu_search);
         txtGroups = findViewById(R.id.txt_menu_groups);
         txtPremium = findViewById(R.id.txt_menu_premium);
+        txtPlayGame = findViewById(R.id.playGame);
 
         String username = getIntent().getStringExtra("userName");
         String password = getIntent().getStringExtra("password");
@@ -41,6 +42,15 @@ public class MainMenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainMenuActivity.this,PremiumActivity.class);
+                intent.putExtra("username",username);
+                startActivity(intent);
+            }
+        });
+
+        txtPlayGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainMenuActivity.this,GameActivity.class);
                 intent.putExtra("username",username);
                 startActivity(intent);
             }

@@ -1,34 +1,19 @@
 package com.edufire.dic3;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.edufire.dic3.Models.APIResponse;
-import com.edufire.dic3.Models.Definitions;
-import com.edufire.dic3.Models.Meanings;
-import com.edufire.dic3.Models.Phonetics;
 import com.edufire.dic3.Models.User;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
-import com.google.firebase.ml.naturallanguage.FirebaseNaturalLanguage;
-import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslateLanguage;
-import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslator;
-import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslatorOptions;
+
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
 
 
