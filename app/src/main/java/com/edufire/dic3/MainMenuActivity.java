@@ -32,6 +32,16 @@ public class MainMenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainMenuActivity.this,SearchActivity.class);
+                intent.putExtra("username",username);
+                startActivity(intent);
+            }
+        });
+
+        txtPremium.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainMenuActivity.this,PremiumActivity.class);
+                intent.putExtra("username",username);
                 startActivity(intent);
             }
         });

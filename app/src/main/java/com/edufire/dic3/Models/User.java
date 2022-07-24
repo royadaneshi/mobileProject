@@ -21,7 +21,6 @@ public class User {
         isPremium = false;
         premiumCode = "";
         allUsers.put(username, this);
-
     }
 
     public void makeUserPremium(String premiumCode) {

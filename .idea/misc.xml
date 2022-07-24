@@ -5,21 +5,18 @@
       <map>
         <entry key="..\:/Education/SUT/Spring-00-01/mobile programming/final-project/app/src/main/res/layout/activity_main.xml" value="0.3692708333333333" />
         <entry key="..\:/Education/SUT/Spring-00-01/mobile programming/final-project/app/src/main/res/layout/activity_main_menu.xml" value="0.3692708333333333" />
+        <entry key="..\:/Education/SUT/Spring-00-01/mobile programming/final-project/app/src/main/res/layout/activity_premium.xml" value="0.4" />
         <entry key="..\:/Education/SUT/Spring-00-01/mobile programming/final-project/app/src/main/res/layout/activity_register.xml" value="0.3692708333333333" />
         <entry key="..\:/Education/SUT/Spring-00-01/mobile programming/final-project/app/src/main/res/layout/activity_search.xml" value="0.35520833333333335" />
         <entry key="..\:/Education/SUT/Spring-00-01/mobile programming/final-project/app/src/main/res/layout/activity_translation.xml" value="0.72" />
         <entry key="..\:/Education/SUT/Spring-00-01/mobile programming/final-project/app/src/main/res/layout/content_register.xml" value="0.3692708333333333" />
+        <entry key="..\:/Education/SUT/Spring-00-01/mobile programming/final-project/app/src/main/res/layout/defenition_item.xml" value="0.36822916666666666" />
         <entry key="..\:/Education/SUT/Spring-00-01/mobile programming/final-project/app/src/main/res/layout/fragment_first.xml" value="0.3692708333333333" />
         <entry key="..\:/Education/SUT/Spring-00-01/mobile programming/final-project/app/src/main/res/layout/fragment_register.xml" value="0.3692708333333333" />
         <entry key="..\:/Education/SUT/Spring-00-01/mobile programming/final-project/app/src/main/res/layout/fragment_second.xml" value="0.3692708333333333" />
         <entry key="..\:/Education/SUT/Spring-00-01/mobile programming/final-project/app/src/main/res/layout/fragment_user_menu.xml" value="0.35520833333333335" />
-        <entry key="..\:/MP_Project/mobileProject/app/src/main/res/layout/activity_admin.xml" value="0.264" />
-        <entry key="..\:/MP_Project/mobileProject/app/src/main/res/layout/activity_main.xml" value="0.23229166666666667" />
-        <entry key="..\:/MP_Project/mobileProject/app/src/main/res/layout/activity_main_menu.xml" value="0.23229166666666667" />
-        <entry key="..\:/MP_Project/mobileProject/app/src/main/res/layout/activity_register.xml" value="0.23229166666666667" />
-        <entry key="..\:/MP_Project/mobileProject/app/src/main/res/layout/activity_search.xml" value="0.23229166666666667" />
-        <entry key="..\:/MP_Project/mobileProject/app/src/main/res/layout/activity_translation.xml" value="0.23229166666666667" />
-        <entry key="..\:/MP_Project/mobileProject/app/src/main/res/layout/my_row.xml" value="0.264" />
+        <entry key="..\:/Education/SUT/Spring-00-01/mobile programming/final-project/app/src/main/res/layout/meaning_item.xml" value="0.536" />
+        <entry key="..\:/Education/SUT/Spring-00-01/mobile programming/final-project/app/src/main/res/layout/phonetic_item.xml" value="0.36822916666666666" />
       </map>
     </option>
   </component>
