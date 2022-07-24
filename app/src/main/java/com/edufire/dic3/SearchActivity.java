@@ -21,6 +21,7 @@ import com.edufire.dic3.Models.APIResponse;
 import com.edufire.dic3.Models.Definitions;
 import com.edufire.dic3.Models.Meanings;
 import com.edufire.dic3.Models.Phonetics;
+import com.edufire.dic3.Models.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.common.modeldownload.FirebaseModelDownloadConditions;
@@ -38,13 +39,14 @@ public class SearchActivity extends AppCompatActivity {
     EditText text;
     TextView translation;
     Button submit;
+    User user ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        Log.d("in", "onCreate: ");
+        user = User.getAllUsers().get(getIntent().getStringExtra("username"));
 
         spinnerFrom = findViewById(R.id.spinner_search_from);
         spinnerTarget = findViewById(R.id.spinner_search_target);
@@ -89,24 +91,29 @@ public class SearchActivity extends AppCompatActivity {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View view) {
-                if (text.getText().toString().equals("")){
-                    Toast.makeText(getParent(),"please fill text field", Toast.LENGTH_SHORT).show();
-                }else {
-                    if (baseLanguage.equals(targetLanguage)){
-                        Intent intent = new Intent(SearchActivity.this,TranslationActivity.class);
-                        intent.putExtra("text",text.getText().toString());
-                        startActivity(intent);
-                    }else{
-                        translation.setVisibility(View.VISIBLE);
-                        String response = translateText(getLanguageCode(baseLanguage.toString()),getLanguageCode(targetLanguage),text.getText().toString());
-                        response.replace("\r","");
-                        translation.setText(response);
-//                        translation.setText(Html.fromHtml(translateText(getLanguageCode(baseLanguage.toString()), getLanguageCode(targetLanguage.toString()), text.getText().toString())));
-//                        System.out.println(translation.getText().toString());
+                if (user.canUserRequest()){
+                    if (text.getText().toString().equals("")){
+                        Toast.makeText(getParent(),"please fill text field", Toast.LENGTH_SHORT).show();
+                    }else {
+                        if (baseLanguage.equals(targetLanguage)){
+                            Intent intent = new Intent(SearchActivity.this,TranslationActivity.class);
+                            intent.putExtra("text",text.getText().toString());
+                            startActivity(intent);
+                        }else{
+                            translation.setVisibility(View.VISIBLE);
+                            String response = translateText(getLanguageCode(baseLanguage.toString()),getLanguageCode(targetLanguage),text.getText().toString());
+                            response.replace("\r","");
+                            translation.setText(response);
+                        }
+                        user.increaseLimitRequestCounter();
                     }
-
-
+                } else{
+                    Toast.makeText(SearchActivity.this,"You have reached your limit please buy premium plan to continue",Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(SearchActivity.this,PremiumActivity.class);
+                    intent.putExtra("username",user.getUsername());
+                    startActivity(intent);
                 }
+
             }
         });
 
