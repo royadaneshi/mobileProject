@@ -21,10 +21,12 @@
 
             <TextView
                 android:id="@+id/userNameTextView"
-                android:layout_width="100dp"
+                android:layout_width="150dp"
                 android:gravity="center"
                 android:layout_height="wrap_content"
                 android:text="@string/hello"
+                android:textSize="20sp"
+                android:textStyle="bold"
                 android:layout_gravity="center"
                 android:textColor="@color/black"/>
 

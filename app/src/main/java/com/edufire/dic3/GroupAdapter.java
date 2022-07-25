@@ -16,16 +16,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupAdapter  extends RecyclerView.Adapter<GroupAdapter.MyViewHolder>{
+public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.MyViewHolder> {
     private Context context;
     private boolean isAccept;
+    private boolean isWordSearch;
     private List<String> users = new ArrayList<>();
     private String username;
 
-    public GroupAdapter(Context context, boolean isAccept, String username) {
+    public GroupAdapter(Context context, boolean isAccept, String username, boolean isWordSearch) {
         this.context = context;
         this.isAccept = isAccept;
         this.username = username;
+        this.isWordSearch = isWordSearch;
     }
 
 
@@ -46,19 +48,21 @@ public class GroupAdapter  extends RecyclerView.Adapter<GroupAdapter.MyViewHolde
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.userName.setText(users.get(position));
-        if(isAccept) {
-            holder.cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(!MainActivity.db.IsInSameGroup(username, users.get(position)))
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isAccept) {
+                    if (!MainActivity.db.IsInSameGroup(username, users.get(position)))
                         MainActivity.db.insertGroups(username, users.get(position));
-                    if(MainActivity.db.isTeammateRequestExistsInDatabase(username, users.get(position)))
+                    if (MainActivity.db.isTeammateRequestExistsInDatabase(username, users.get(position)))
                         MainActivity.db.deleteTeammateRequest(username, users.get(position));
                     setGroups(MainActivity.db.getInvitation(username));
                     Toast.makeText(context, "now you are in a group", Toast.LENGTH_SHORT).show();
+                } else if(isWordSearch){
+                    Toast.makeText(context, "word search", Toast.LENGTH_SHORT).show();
                 }
-            });
-        }
+            }
+        });
     }
 
     @Override
@@ -66,9 +70,10 @@ public class GroupAdapter  extends RecyclerView.Adapter<GroupAdapter.MyViewHolde
         return users.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView userName;
         CardView cardView;
+
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             userName = itemView.findViewById(R.id.username_group);

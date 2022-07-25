@@ -21,6 +21,10 @@
         android:icon="@drawable/invitations"
         android:title="Group request" />
 
+    <item android:id="@+id/word_search_in_database"
+        android:icon="@drawable/ic_baseline_apps_words_24"
+        android:title="Words" />
+
 </group>
     <item android:title="" >
         <menu >

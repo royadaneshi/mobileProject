@@ -10,31 +10,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.edufire.dic3.Models.Word;
+
 import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link RequestGroupFragment#newInstance} factory method to
+ * Use the {@link WordsInDatabaseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RequestGroupFragment extends Fragment {
+public class WordsInDatabaseFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private RecyclerView recyclerView;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private RecyclerView recyclerView;
     private String username;
 
-    public RequestGroupFragment() {
+    public WordsInDatabaseFragment() {
         // Required empty public constructor
     }
 
-    public RequestGroupFragment(String username) {
+    public WordsInDatabaseFragment(String username) {
         this.username = username;
     }
 
@@ -44,11 +46,11 @@ public class RequestGroupFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment RequestGroupFragment.
+     * @return A new instance of fragment WordsInDatabaseFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RequestGroupFragment newInstance(String param1, String param2) {
-        RequestGroupFragment fragment = new RequestGroupFragment();
+    public static WordsInDatabaseFragment newInstance(String param1, String param2) {
+        WordsInDatabaseFragment fragment = new WordsInDatabaseFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -69,13 +71,18 @@ public class RequestGroupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_request_group, container, false);
-        recyclerView = view.findViewById(R.id.request_group_recycler_view);
+        View view = inflater.inflate(R.layout.fragment_words_in_database, container, false);
+        recyclerView = view.findViewById(R.id.wordDatabase_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        GroupAdapter groupAdapter = new GroupAdapter(getActivity(), true, username, false);
+        GroupAdapter groupAdapter = new GroupAdapter(getActivity(), false, username, true);
         recyclerView.setAdapter(groupAdapter);
-        groupAdapter.setGroups(MainActivity.db.getInvitation(username));
+        ArrayList<String> words = new ArrayList<>();
+        for(Word word : MainActivity.db.getUserSearchWordFromDatabase(username)){
+            words.add(word.getWord());
+        }
+        groupAdapter.setGroups(words);
+
         return view;
     }
 }

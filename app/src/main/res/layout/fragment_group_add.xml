@@ -18,18 +18,18 @@
             android:layout_below="@+id/editText_send_request"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:text="Button" />
+            android:text="Send" />
 
         <EditText
             android:id="@+id/editText_send_request"
-            android:layout_marginLeft="60dp"
-            android:layout_marginRight="60dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Username to send request" />
+            android:hint="Username to send request" />
     </RelativeLayout>
 
 </FrameLayout>

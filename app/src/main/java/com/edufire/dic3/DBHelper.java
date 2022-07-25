@@ -143,7 +143,6 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public void getAllUserFromDataBase() {
-
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursorCourses = db.rawQuery("SELECT * FROM " + Table1, null);
 

@@ -76,6 +76,10 @@ public class MainMenuActivity extends AppCompatActivity {
                         fragment = new RequestGroupFragment(username);
                         loadFragment(fragment);
                         break;
+                    case R.id.word_search_in_database:
+                        fragment = new WordsInDatabaseFragment(username);
+                        loadFragment(fragment);
+                        break;
                     case R.id.setting:
                         fragment = new SettingFragment();
                         loadFragment(fragment);

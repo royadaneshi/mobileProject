@@ -78,7 +78,7 @@ public class GroupsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.group_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        GroupAdapter groupAdapter = new GroupAdapter(getActivity(), false, username);
+        GroupAdapter groupAdapter = new GroupAdapter(getActivity(), false, username, false);
         recyclerView.setAdapter(groupAdapter);
         groupAdapter.setGroups(MainActivity.db.getGroupCommon(username));
 

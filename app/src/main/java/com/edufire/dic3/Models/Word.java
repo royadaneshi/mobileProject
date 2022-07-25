@@ -24,6 +24,10 @@ public class Word {
         allWords.put(word, this);
     }
 
+    public String getWord() {
+        return word;
+    }
+
     public void setMeaning(ArrayList<String> meaning) {
         this.meaning = meaning;
     }
