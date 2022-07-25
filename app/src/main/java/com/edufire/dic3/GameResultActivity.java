@@ -31,7 +31,7 @@ public class GameResultActivity extends AppCompatActivity {
 
         startNewQuiz.setOnClickListener(view -> {
             Intent intent = new Intent(GameResultActivity.this, MainMenuActivity.class);
-            intent.putExtra("username",username);
+            intent.putExtra("userName", username);
             startActivity(intent);
             finish();
         });
@@ -41,7 +41,7 @@ public class GameResultActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(GameResultActivity.this, MainMenuActivity.class);
-        intent.putExtra("username",username);
+        intent.putExtra("userName",username);
         startActivity(intent);
         finish();
     }

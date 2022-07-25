@@ -139,7 +139,7 @@ public class GameActivity extends AppCompatActivity {
                 quizTimer.cancel();
 
                 Intent intent = new Intent(GameActivity.this, MainMenuActivity.class);
-                intent.putExtra("username", username);
+                intent.putExtra("userName", username);
                 startActivity(intent);
                 finish();
             }
@@ -163,7 +163,7 @@ public class GameActivity extends AppCompatActivity {
                     quizTimer.cancel();
 
                     Intent intent = new Intent(GameActivity.this, MainMenuActivity.class);
-                    intent.putExtra("username", username);
+                    intent.putExtra("userName", username);
                     startActivity(intent);
                     finish();
                 }
@@ -219,7 +219,7 @@ public class GameActivity extends AppCompatActivity {
             Intent intent = new Intent(GameActivity.this, GameResultActivity.class);
             intent.putExtra("correct", getCorrectAnswers());
             intent.putExtra("incorrect", getIncorrectAnswers());
-            intent.putExtra("username", username);
+            intent.putExtra("userName", username);
             startActivity(intent);
             finish();
         }
@@ -257,7 +257,7 @@ public class GameActivity extends AppCompatActivity {
         quizTimer.cancel();
 
         Intent intent = new Intent(GameActivity.this, MainMenuActivity.class);
-        intent.putExtra("username", username);
+        intent.putExtra("userName", username);
         startActivity(intent);
         finish();
     }

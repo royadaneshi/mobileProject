@@ -18,6 +18,8 @@
     <string name="limit">limit</string>
     <string name="user_image" />
     <string name="number_of_users">number of users :</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 
     <string-array name="languages">
         <item>English</item>
