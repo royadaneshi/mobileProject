@@ -5,7 +5,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,8 +50,10 @@ public class GroupAdapter  extends RecyclerView.Adapter<GroupAdapter.MyViewHolde
             holder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    MainActivity.db.insertGroups(username, users.get(position));
-                    MainActivity.db.deleteTeammateRequest(username, users.get(position));
+                    if(!MainActivity.db.IsInSameGroup(username, users.get(position)))
+                        MainActivity.db.insertGroups(username, users.get(position));
+                    if(MainActivity.db.isTeammateRequestExistsInDatabase(username, users.get(position)))
+                        MainActivity.db.deleteTeammateRequest(username, users.get(position));
                     setGroups(MainActivity.db.getInvitation(username));
                     Toast.makeText(context, "now you are in a group", Toast.LENGTH_SHORT).show();
                 }

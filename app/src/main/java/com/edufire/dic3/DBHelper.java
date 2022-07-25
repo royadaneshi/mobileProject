@@ -232,4 +232,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
+    public void updateUserScore(String username, int score){
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("score", score);
+        db.update(Table1, contentValues, "username = '" + username + "'", null);
+    }
+
 }

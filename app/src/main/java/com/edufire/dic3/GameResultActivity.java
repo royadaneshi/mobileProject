@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.edufire.dic3.Models.User;
+
 public class GameResultActivity extends AppCompatActivity {
 
     private static String username;
@@ -25,6 +27,13 @@ public class GameResultActivity extends AppCompatActivity {
         final int getCorrectAnswer = getIntent().getIntExtra("correct", 0);
         final int getIncorrectAnswer = getIntent().getIntExtra("incorrect", 0);
         username = getIntent().getStringExtra("userName");
+
+        User user = User.getAllUsers().get(username);
+        if(3 * getCorrectAnswer - getIncorrectAnswer > 0)
+            if (user != null) {
+                user.increaseScore(3 * getCorrectAnswer - getIncorrectAnswer);
+                MainActivity.db.updateUserScore(username, user.getScore());
+            }
 
         correctAnswer.setText("Correct Answer : " + getCorrectAnswer);
         incorrectAnswer.setText("Wrong Answer : " + getIncorrectAnswer);

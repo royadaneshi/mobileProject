@@ -63,6 +63,10 @@ public class User {
         this.score = score;
     }
 
+    public void increaseScore(int score) {
+        this.score += score;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
