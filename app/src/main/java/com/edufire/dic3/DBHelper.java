@@ -100,6 +100,16 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void deleteTeammateRequest(String usernameOfSender, String usernameOfReceiver){
+        SQLiteDatabase db = this.getWritableDatabase();
+        if(isTeammateRequestExistsInDatabase(usernameOfSender, usernameOfReceiver)) {
+            db.execSQL("DELETE FROM TeammateRequest WHERE usernameOfSender " + "=\"" + usernameOfSender + "\" AND usernameOfReceiver " + "=\"" + usernameOfReceiver + "\";");
+        }
+        if(isTeammateRequestExistsInDatabase(usernameOfReceiver, usernameOfSender)) {
+            db.execSQL("DELETE FROM TeammateRequest WHERE usernameOfSender " + "=\"" + usernameOfReceiver + "\" AND usernameOfReceiver " + "=\"" + usernameOfSender + "\";");
+        }
+    }
+
     public ArrayList<Word> getUserSearchWordFromDatabase(String user) {
         ArrayList<Word> UserSearchWords = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -152,6 +162,42 @@ public class DBHelper extends SQLiteOpenHelper {
         cursorCourses.close();
     }
 
+    public ArrayList<String> getInvitation(String receiver){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursorCourses = db.rawQuery("SELECT * FROM " + Table2, null);
+
+        ArrayList<String> sender = new ArrayList<>();
+
+        if (cursorCourses.moveToFirst()) {
+            do {
+                if(cursorCourses.getString(1).equals(receiver)){
+                    sender.add(cursorCourses.getString(0));
+                }
+            } while (cursorCourses.moveToNext());
+        }
+        cursorCourses.close();
+        return sender;
+    }
+
+    public ArrayList<String> getGroupCommon(String username){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursorCourses = db.rawQuery("SELECT * FROM " + Table3, null);
+
+        ArrayList<String> inSameGroup = new ArrayList<>();
+
+        if (cursorCourses.moveToFirst()) {
+            do {
+                if(cursorCourses.getString(1).equals(username)){
+                    inSameGroup.add(cursorCourses.getString(0));
+                } else if(cursorCourses.getString(0).equals(username)){
+                    inSameGroup.add(cursorCourses.getString(1));
+                }
+            } while (cursorCourses.moveToNext());
+        }
+        cursorCourses.close();
+        return inSameGroup;
+    }
+
     public boolean isTeammateRequestExistsInDatabase(String sender, String receiver) {
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -160,6 +206,24 @@ public class DBHelper extends SQLiteOpenHelper {
         if (cursorCourses.moveToFirst()) {
             do {
                 if(cursorCourses.getString(0).equals(sender) && cursorCourses.getString(1).equals(receiver)){
+                    return true;
+                }
+            } while (cursorCourses.moveToNext());
+        }
+        cursorCourses.close();
+        return false;
+    }
+
+    public boolean IsInSameGroup(String sender, String receiver){
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursorCourses = db.rawQuery("SELECT * FROM " + Table3, null);
+
+        if (cursorCourses.moveToFirst()) {
+            do {
+                if(cursorCourses.getString(0).equals(sender) && cursorCourses.getString(1).equals(receiver)){
+                    return true;
+                } else if(cursorCourses.getString(1).equals(sender) && cursorCourses.getString(2).equals(receiver)){
                     return true;
                 }
             } while (cursorCourses.moveToNext());

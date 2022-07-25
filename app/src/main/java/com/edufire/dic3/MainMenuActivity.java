@@ -63,7 +63,15 @@ public class MainMenuActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case R.id.user_groups:
-                        fragment = new GroupsFragment();
+                        fragment = new GroupsFragment(username);
+                        loadFragment(fragment);
+                        break;
+                    case R.id.add_groups:
+                        fragment = new GroupAddFragment(username);
+                        loadFragment(fragment);
+                        break;
+                    case R.id.rq_groups:
+                        fragment = new RequestGroupFragment(username);
                         loadFragment(fragment);
                         break;
                     case R.id.setting:

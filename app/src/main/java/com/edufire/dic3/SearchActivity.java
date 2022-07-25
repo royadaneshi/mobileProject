@@ -94,7 +94,7 @@ public class SearchActivity extends AppCompatActivity {
                 if (user.canUserRequest()){
                     if (text.getText().toString().equals("")){
                         Toast.makeText(getParent(),"please fill text field", Toast.LENGTH_SHORT).show();
-                    }else {
+                    } else {
                         if (baseLanguage.equals(targetLanguage)){
                             Intent intent = new Intent(SearchActivity.this,TranslationActivity.class);
                             intent.putExtra("text",text.getText().toString());

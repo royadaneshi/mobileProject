@@ -13,6 +13,14 @@
         android:icon="@drawable/group"
         android:title="Groups" />
 
+    <item android:id="@+id/add_groups"
+        android:icon="@drawable/group_add"
+        android:title="Invite to Group" />
+
+    <item android:id="@+id/rq_groups"
+        android:icon="@drawable/invitations"
+        android:title="Group request" />
+
 </group>
     <item android:title="" >
         <menu >

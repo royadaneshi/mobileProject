@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.edufire.dic3.Models.User;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> {
