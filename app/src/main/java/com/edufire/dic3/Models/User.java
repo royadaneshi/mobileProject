@@ -10,6 +10,7 @@ public class User {
     int limitRequestCounter;
     boolean isPremium;
     String premiumCode;
+    int score;
     ArrayList<Word> searchWord = new ArrayList<Word>();
 
     static HashMap<String, User> allUsers = new HashMap<>();
@@ -19,6 +20,7 @@ public class User {
         this.password = password;
         limitRequestCounter = 0;
         isPremium = false;
+        score = 0;
         premiumCode = "";
         allUsers.put(username, this);
     }
@@ -52,6 +54,15 @@ public class User {
         limitRequestCounter++;
     }
 
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -82,6 +93,18 @@ public class User {
 
     public void setSearchWord(ArrayList<Word> searchWord) {
         this.searchWord = searchWord;
+    }
+
+    public void setPremium(int premium) {
+        if(premium == 0){
+            isPremium = false;
+            return;
+        }
+        isPremium = true;
+    }
+
+    public void setPremiumCode(String premiumCode) {
+        this.premiumCode = premiumCode;
     }
 
 }

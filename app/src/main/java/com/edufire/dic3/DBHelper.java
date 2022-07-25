@@ -12,11 +12,13 @@ import com.edufire.dic3.Models.User;
 import com.edufire.dic3.Models.Word;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class DBHelper extends SQLiteOpenHelper {
-    public static final String DBName = "UserAndSearchWords";
-    public static final String TableName = "searchWords";
+    public static final String DBName = "Dictionary";
+    public static final String Table1 = "UserInformation";
+    public static final String Table2 = "TeammateRequest";
+    public static final String Table3 = "Groups";
+    public static final String Table4 = "WordSearch";
     public Context context1;
 
 
@@ -27,64 +29,98 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("create table searchWords(user text,password text, word text, meaning1 text, meaning2 text, meaning3 text, audioLink text, description text, examples text, roleOfWordInSentence text, synonyms1 text, synonyms2 text,synonyms3 text, reqHour text, primary key (user, password, word))");
+        sqLiteDatabase.execSQL("create table UserInformation(username text primary key, password text, score Integer, limitRequestCounter Integer, isPremium INTEGER DEFAULT 0, premiumCode text)");
+        sqLiteDatabase.execSQL("create table TeammateRequest(usernameOfSender text, usernameOfReceiver text, primary key (usernameOfSender, usernameOfReceiver))");
+        sqLiteDatabase.execSQL("create table Groups(firstUsername text, secondUsername text, primary key (firstUsername, secondUsername))");
+        sqLiteDatabase.execSQL("create table WordSearch(user text, word text, meaning1 text, meaning2 text, meaning3 text, audioLink text, description text, examples text, roleOfWordInSentence text, synonyms1 text, synonyms2 text,synonyms3 text, reqHour text, primary key (user, word))");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        sqLiteDatabase.execSQL("drop table if exists searchWords");
+        sqLiteDatabase.execSQL("drop table if exists " + Table1);
+        sqLiteDatabase.execSQL("drop table if exists " + Table2);
+        sqLiteDatabase.execSQL("drop table if exists " + Table3);
+        sqLiteDatabase.execSQL("drop table if exists " + Table4);
+
+
         onCreate(sqLiteDatabase);
     }
 
-    public void insertData(String user, String password , String word , String meaning1 , String meaning2 , String meaning3 , String audioLink, String description , String examples, String roleOfWordInSentence, String synonyms1, String synonyms2, String synonyms3, String reqHour) {
+    public void insertUserInformation(String username, String password , int score ,int limitRequestCounter, boolean isPremium, String premiumCode){
         SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues userValues = new ContentValues();
+        userValues.put("username", username);
+        userValues.put("password", password);
+        userValues.put("score", score);
+        userValues.put("limitRequestCounter", limitRequestCounter);
+        userValues.put("isPremium", isPremium);
+        userValues.put("premiumCode", premiumCode);
+        db.insert(Table1, null, userValues);
+    }
 
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("user", user);
-        contentValues.put("password", password);
-        contentValues.put("word", word);
-        contentValues.put("meaning1", meaning1);
-        contentValues.put("meaning2", meaning2);
-        contentValues.put("meaning3", meaning3);
-        contentValues.put("audioLink", audioLink);
-        contentValues.put("description", description);
-        contentValues.put("examples", examples);
-        contentValues.put("roleOfWordInSentence", roleOfWordInSentence);
-        contentValues.put("synonyms1", synonyms1);
-        contentValues.put("synonyms2", synonyms2);
-        contentValues.put("synonyms3", synonyms3);
-        contentValues.put("reqHour", reqHour);
-        db.insert(TableName, null, contentValues);
+    public void insertTeammateRequest(String usernameOfSender, String usernameOfReceiver){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues requestValues = new ContentValues();
+        requestValues.put("usernameOfSender", usernameOfSender);
+        requestValues.put("usernameOfReceiver", usernameOfReceiver);
+        db.insert(Table2, null, requestValues);
+    }
+
+    public void insertGroups(String firstUsername, String secondUsername){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues groupValues = new ContentValues();
+        groupValues.put("firstUsername", firstUsername);
+        groupValues.put("secondUsername", secondUsername);
+        db.insert(Table3, null, groupValues);
+    }
+
+    public void insertWordInformation(String user, String word , String meaning1 , String meaning2 , String meaning3 , String audioLink, String description , String examples, String roleOfWordInSentence, String synonyms1, String synonyms2, String synonyms3, String reqHour) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues wordValues = new ContentValues();
+        wordValues.put("user", user);
+        wordValues.put("word", word);
+        wordValues.put("meaning1", meaning1);
+        wordValues.put("meaning2", meaning2);
+        wordValues.put("meaning3", meaning3);
+        wordValues.put("audioLink", audioLink);
+        wordValues.put("description", description);
+        wordValues.put("examples", examples);
+        wordValues.put("roleOfWordInSentence", roleOfWordInSentence);
+        wordValues.put("synonyms1", synonyms1);
+        wordValues.put("synonyms2", synonyms2);
+        wordValues.put("synonyms3", synonyms3);
+        wordValues.put("reqHour", reqHour);
+        db.insert(Table4, null, wordValues);
     }
 
     public void deleteData(String user, String password, String word){
-        if(getUserSearchWordFromDataBase(user, password) != null) {
+        if(getUserSearchWordFromDatabase(user) != null) {
             SQLiteDatabase db = getWritableDatabase();
             db.execSQL("DELETE FROM WeatherInfo WHERE user " + "=\"" + user + "\" AND password " + "=\"" + password + "\" AND word " + "=\"" + word + "\";");
         }
     }
 
-    public ArrayList<Word> getUserSearchWordFromDataBase(String user, String password) {
+    public ArrayList<Word> getUserSearchWordFromDatabase(String user) {
         ArrayList<Word> UserSearchWords = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursorCourses = db.rawQuery("select * from searchWords", null);
+        Cursor cursorCourses = db.rawQuery("SELECT * FROM " + Table4, null);
 
         if (cursorCourses.moveToFirst()) {
             do {
-                if (cursorCourses.getString(0).equals(user) && cursorCourses.getString(1).equals(password)) {
-                    String word = cursorCourses.getString(2);
-                    String audioLink = cursorCourses.getString(6);
-                    String description = cursorCourses.getString(7);
-                    String roleOfWordInSentence = cursorCourses.getString(9);
+                if (cursorCourses.getString(0).equals(user)) {
+                    String word = cursorCourses.getString(1);
+                    String audioLink = cursorCourses.getString(5);
+                    String description = cursorCourses.getString(6);
+                    String roleOfWordInSentence = cursorCourses.getString(8);
                     ArrayList<String> examples = new ArrayList<>();
-                    examples.add(cursorCourses.getString(8));
+                    examples.add(cursorCourses.getString(7));
                     ArrayList<String> meaning = new ArrayList<>();
                     ArrayList<String> synonyms = new ArrayList<>();
                     for (int i = 0; i < 3; i++) {
-                        if(cursorCourses.getString(3 + i) != null)
-                            meaning.add(cursorCourses.getString(3 + i));
-                        if(cursorCourses.getString(10 + i) != null)
-                            synonyms.add(cursorCourses.getString(3 + i));
+                        if(cursorCourses.getString(2 + i) != null)
+                            meaning.add(cursorCourses.getString(2 + i));
+                        if(cursorCourses.getString(9 + i) != null)
+                            synonyms.add(cursorCourses.getString(9 + i));
                     }
                     UserSearchWords.add(new Word(word, meaning, audioLink, description, examples, roleOfWordInSentence, synonyms));
                 }
@@ -96,27 +132,40 @@ public class DBHelper extends SQLiteOpenHelper {
         return UserSearchWords;
     }
 
-    public HashMap<String, User> getAllUserFromDataBase() {
-        HashMap<String, User> allUser = new HashMap<>();
+    public void getAllUserFromDataBase() {
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursorCourses = db.rawQuery("select * from searchWords", null);
+        Cursor cursorCourses = db.rawQuery("SELECT * FROM " + Table1, null);
 
         if (cursorCourses.moveToFirst()) {
             do {
-                if(!allUser.containsKey(cursorCourses.getString(0))) {
-                    User user = new User(cursorCourses.getString(0), cursorCourses.getString(1));
-                    ArrayList<Word> searched = getUserSearchWordFromDataBase(user.getUsername(), user.getPassword());
+                User user = new User(cursorCourses.getString(0), cursorCourses.getString(1));
+                ArrayList<Word> searched = getUserSearchWordFromDatabase(user.getUsername());
+                if(searched != null)
                     user.setSearchWord(searched);
-                    user.setLimitRequestCounter(searched.size() - 1);
-                    allUser.put(cursorCourses.getString(0), user);
+                user.setLimitRequestCounter(cursorCourses.getInt(3));
+                user.setScore(cursorCourses.getInt(2));
+                user.setPremium(cursorCourses.getInt(4));
+                user.setPremiumCode(cursorCourses.getString(5));
+            } while (cursorCourses.moveToNext());
+        }
+        cursorCourses.close();
+    }
+
+    public boolean isTeammateRequestExistsInDatabase(String sender, String receiver) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursorCourses = db.rawQuery("SELECT * FROM " + Table2, null);
+
+        if (cursorCourses.moveToFirst()) {
+            do {
+                if(cursorCourses.getString(0).equals(sender) && cursorCourses.getString(1).equals(receiver)){
+                    return true;
                 }
             } while (cursorCourses.moveToNext());
         }
         cursorCourses.close();
-        if(allUser.size() == 0)
-            return null;
-        return allUser;
+        return false;
     }
 
 }

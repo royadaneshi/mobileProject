@@ -19,12 +19,11 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText txtUsername;
-    EditText txtPassword;
-    TextView noAccount;
-    Button btnLogin;
     @SuppressLint("StaticFieldLeak")
     public static DBHelper db;
+    EditText txtUsername, txtPassword;
+    TextView noAccount;
+    Button btnLogin;
     HashMap<String, String> adminUsers = new HashMap<>();
 
     @Override
@@ -33,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         db = new DBHelper(MainActivity.this);
-        loadData();
+        db.getAllUserFromDataBase();
 
         txtUsername = findViewById(R.id.inputUsername);
         txtPassword = findViewById(R.id.inputPassword);
@@ -67,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "login successfully", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(MainActivity.this, MainMenuActivity.class);
                         intent.putExtra("userName", username);
-                        intent.putExtra("password", password);
                         startActivity(intent);
                     } else {
                         Toast.makeText(getApplicationContext(), "Wrong Password", Toast.LENGTH_SHORT).show();
@@ -88,12 +86,12 @@ public class MainActivity extends AppCompatActivity {
 //        RequestManager requestManager = new RequestManager(MainActivity.this);
 //        requestManager.getWordMeaning(listener, "hello");//put input word instead of 'hello'
     }
-
-    private void loadData() {
-        HashMap<String, User> allUser = db.getAllUserFromDataBase();
-        if (allUser != null)
-            User.setAllUsers(allUser);
-    }
+//
+//    private void loadData() {
+//        HashMap<String, User> allUser = db.getAllUserFromDataBase();
+//        if (allUser != null)
+//            User.setAllUsers(allUser);
+//    }
 
 
 //    public String translateText(int fromLanguageCode, int toLanguageCode, String source) {

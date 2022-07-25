@@ -25,14 +25,13 @@ public class MainMenuActivity extends AppCompatActivity {
         txtPlayGame = findViewById(R.id.playGame);
 
         String username = getIntent().getStringExtra("userName");
-        String password = getIntent().getStringExtra("password");
 
         user = User.getAllUsers().get(username);
 
         txtSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainMenuActivity.this,SearchActivity.class);
+                Intent intent = new Intent(MainMenuActivity.this, SearchActivity.class);
                 intent.putExtra("username",username);
                 startActivity(intent);
             }
@@ -41,8 +40,8 @@ public class MainMenuActivity extends AppCompatActivity {
         txtPremium.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainMenuActivity.this,PremiumActivity.class);
-                intent.putExtra("username",username);
+                Intent intent = new Intent(MainMenuActivity.this, PremiumActivity.class);
+                intent.putExtra("username", username);
                 startActivity(intent);
             }
         });
@@ -50,8 +49,17 @@ public class MainMenuActivity extends AppCompatActivity {
         txtPlayGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainMenuActivity.this,GameActivity.class);
-                intent.putExtra("username",username);
+                Intent intent = new Intent(MainMenuActivity.this, GameActivity.class);
+                intent.putExtra("username", username);
+                startActivity(intent);
+            }
+        });
+
+        txtGroups.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainMenuActivity.this, GroupActivity.class);
+                intent.putExtra("username", username);
                 startActivity(intent);
             }
         });

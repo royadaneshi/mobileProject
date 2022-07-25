@@ -14,11 +14,12 @@
 
         <ImageView
             android:id="@+id/back_btn_game"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="15dp"
-            android:src="@color/black" />
+            android:src="@drawable/back_icon" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,10 +39,10 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_marginStart="15dp"
-                android:src="@color/black"/>
+                android:src="@drawable/timer_icon"/>
 
             <TextView
                 android:id="@+id/timer"
@@ -73,7 +74,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="-20dp"
         android:background="@drawable/round_back_light_yellow10"
         android:gravity="center"
         android:text="Question will come here..."
@@ -139,7 +140,7 @@
         android:layout_marginTop="30dp"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        android:background="#302929"
+        android:background="@drawable/round_back_black20"
         android:text="Next"/>
 
 </LinearLayout>

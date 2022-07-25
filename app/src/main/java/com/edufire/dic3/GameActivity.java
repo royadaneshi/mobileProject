@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,10 +25,13 @@ public class GameActivity extends AppCompatActivity {
     private int currentQuestionPosition = 0;
     private List<QuestionsList> questionsLists;
     private String selectedOptionByUser = "";
+    private static String username;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        username = getIntent().getStringExtra("userName");
 
         final ImageView backBtn = findViewById(R.id.back_btn_game);
         final TextView timer = findViewById(R.id.timer);
@@ -136,7 +138,9 @@ public class GameActivity extends AppCompatActivity {
                 quizTimer.purge();
                 quizTimer.cancel();
 
-                startActivity(new Intent(GameActivity.this, MainActivity.class));
+                Intent intent = new Intent(GameActivity.this, MainMenuActivity.class);
+                intent.putExtra("username", username);
+                startActivity(intent);
                 finish();
             }
         });
@@ -152,6 +156,16 @@ public class GameActivity extends AppCompatActivity {
                 if(seconds == 60){
                     totalTimeInMin++;
                     seconds = 0;
+                }
+
+                if(totalTimeInMin == 3){
+                    quizTimer.purge();
+                    quizTimer.cancel();
+
+                    Intent intent = new Intent(GameActivity.this, MainMenuActivity.class);
+                    intent.putExtra("username", username);
+                    startActivity(intent);
+                    finish();
                 }
 
                 runOnUiThread(new Runnable() {
@@ -205,7 +219,7 @@ public class GameActivity extends AppCompatActivity {
             Intent intent = new Intent(GameActivity.this, GameResultActivity.class);
             intent.putExtra("correct", getCorrectAnswers());
             intent.putExtra("incorrect", getIncorrectAnswers());
-
+            intent.putExtra("username", username);
             startActivity(intent);
             finish();
         }
@@ -242,7 +256,9 @@ public class GameActivity extends AppCompatActivity {
         quizTimer.purge();
         quizTimer.cancel();
 
-        startActivity(new Intent(GameActivity.this, MainActivity.class));
+        Intent intent = new Intent(GameActivity.this, MainMenuActivity.class);
+        intent.putExtra("username", username);
+        startActivity(intent);
         finish();
     }
 
