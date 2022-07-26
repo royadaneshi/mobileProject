@@ -231,10 +231,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public void updateUserScore(String username, int score){
+    public void updateUserScore(String username, int score,boolean isPremium){
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("score", score);
+        contentValues.put("isPremium", isPremium);
         db.update(Table1, contentValues, "username = '" + username + "'", null);
     }
 

@@ -32,7 +32,7 @@ public class GameResultActivity extends AppCompatActivity {
         if(3 * getCorrectAnswer - getIncorrectAnswer > 0)
             if (user != null) {
                 user.increaseScore(3 * getCorrectAnswer - getIncorrectAnswer);
-                MainActivity.db.updateUserScore(username, user.getScore());
+                MainActivity.db.updateUserScore(username, user.getScore(), user.isPremium());
             }
 
         correctAnswer.setText("Correct Answer : " + getCorrectAnswer);

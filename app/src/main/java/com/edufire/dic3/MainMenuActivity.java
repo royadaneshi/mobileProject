@@ -36,6 +36,7 @@ public class MainMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
 
         String username = getIntent().getStringExtra("userName");
+        user = User.getAllUsers().get(username);
         TextView textView = findViewById(R.id.userNameTextView);
         textView.setText(username);
 
@@ -85,6 +86,17 @@ public class MainMenuActivity extends AppCompatActivity {
                         loadFragment(fragment);
                         break;
                     case R.id.support:
+                        if(!user.isPremium()) {
+                            if (user.getScore() > 30) {
+                                user.setUserPremium(true);
+                                MainActivity.db.updateUserScore(username, user.getScore(), true);
+                                Toast.makeText(MainMenuActivity.this, "now you have premium account", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(MainMenuActivity.this, "You need " + (30 - user.getScore()) + " score", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(MainMenuActivity.this, "your account already premium", Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     case R.id.logout:
                         intent = new Intent(MainMenuActivity.this, MainActivity.class);
