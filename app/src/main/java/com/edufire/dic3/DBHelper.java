@@ -114,7 +114,6 @@ public class DBHelper extends SQLiteOpenHelper {
         ArrayList<Word> UserSearchWords = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursorCourses = db.rawQuery("SELECT * FROM " + Table4, null);
-
         if (cursorCourses.moveToFirst()) {
             do {
                 if (cursorCourses.getString(0).equals(user)) {
@@ -137,8 +136,6 @@ public class DBHelper extends SQLiteOpenHelper {
             } while (cursorCourses.moveToNext());
         }
         cursorCourses.close();
-        if(UserSearchWords.size() == 0)
-            return null;
         return UserSearchWords;
     }
 
@@ -222,7 +219,23 @@ public class DBHelper extends SQLiteOpenHelper {
             do {
                 if(cursorCourses.getString(0).equals(sender) && cursorCourses.getString(1).equals(receiver)){
                     return true;
-                } else if(cursorCourses.getString(1).equals(sender) && cursorCourses.getString(2).equals(receiver)){
+                } else if(cursorCourses.getString(1).equals(sender) && cursorCourses.getString(0).equals(receiver)){
+                    return true;
+                }
+            } while (cursorCourses.moveToNext());
+        }
+        cursorCourses.close();
+        return false;
+    }
+
+    public boolean IsWorldSearchExist(String username, String word){
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursorCourses = db.rawQuery("SELECT * FROM " + Table4, null);
+
+        if (cursorCourses.moveToFirst()) {
+            do {
+                if(cursorCourses.getString(0).equals(username) && cursorCourses.getString(1).equals(word)){
                     return true;
                 }
             } while (cursorCourses.moveToNext());

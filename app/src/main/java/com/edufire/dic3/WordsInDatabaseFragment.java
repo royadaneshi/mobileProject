@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.edufire.dic3.Models.User;
 import com.edufire.dic3.Models.Word;
 
 import java.util.ArrayList;
@@ -78,8 +80,11 @@ public class WordsInDatabaseFragment extends Fragment {
         GroupAdapter groupAdapter = new GroupAdapter(getActivity(), false, username, true);
         recyclerView.setAdapter(groupAdapter);
         ArrayList<String> words = new ArrayList<>();
-        for(Word word : MainActivity.db.getUserSearchWordFromDatabase(username)){
-            words.add(word.getWord());
+        for(String str : MainActivity.db.getGroupCommon(username)){
+            for(Word word : MainActivity.db.getUserSearchWordFromDatabase(str)){
+                if(!words.contains(word.getWord()))
+                    words.add(word.getWord());
+            }
         }
         groupAdapter.setGroups(words);
 

@@ -51,6 +51,10 @@ public class MainMenuActivity extends AppCompatActivity {
             Fragment fragment;
             Intent intent;
             switch (id){
+                case R.id.home_menu:
+                    fragment = new FirstPageFragment(username);
+                    loadFragment(fragment);
+                    break;
                 case R.id.search:
                     intent = new Intent(MainMenuActivity.this, SearchActivity.class);
                     intent.putExtra("userName",username);
@@ -87,6 +91,8 @@ public class MainMenuActivity extends AppCompatActivity {
                             user.setUserPremium(true);
                             MainActivity.db.updateUserScore(username, user.getScore(), true);
                             Toast.makeText(MainMenuActivity.this, "now you have premium account", Toast.LENGTH_SHORT).show();
+                            fragment = new FirstPageFragment(username);
+                            loadFragment(fragment);
                         } else {
                             Toast.makeText(MainMenuActivity.this, "You need " + (30 - user.getScore()) + " score", Toast.LENGTH_SHORT).show();
                         }

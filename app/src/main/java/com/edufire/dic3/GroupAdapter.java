@@ -2,6 +2,7 @@ package com.edufire.dic3;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.edufire.dic3.Models.Word;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +23,8 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.MyViewHolder
     private Context context;
     private boolean isAccept;
     private boolean isWordSearch;
-    private List<String> users = new ArrayList<>();
     private String username;
+    private List<String> users = new ArrayList<>();
 
     public GroupAdapter(Context context, boolean isAccept, String username, boolean isWordSearch) {
         this.context = context;
@@ -48,19 +51,24 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.MyViewHolder
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.userName.setText(users.get(position));
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isAccept) {
-                    if (!MainActivity.db.IsInSameGroup(username, users.get(position)))
-                        MainActivity.db.insertGroups(username, users.get(position));
-                    if (MainActivity.db.isTeammateRequestExistsInDatabase(username, users.get(position)))
+        holder.cardView.setOnClickListener(view -> {
+            if (isAccept) {
+                if (!MainActivity.db.IsInSameGroup(username, users.get(position))) {
+                    MainActivity.db.insertGroups(username, users.get(position));
+                    if (MainActivity.db.isTeammateRequestExistsInDatabase(users.get(position), username) ||
+                            MainActivity.db.isTeammateRequestExistsInDatabase(username, users.get(position)))
                         MainActivity.db.deleteTeammateRequest(username, users.get(position));
-                    setGroups(MainActivity.db.getInvitation(username));
                     Toast.makeText(context, "now you are in a group", Toast.LENGTH_SHORT).show();
-                } else if(isWordSearch){
-                    Toast.makeText(context, "word search", Toast.LENGTH_SHORT).show();
+                    setGroups(MainActivity.db.getInvitation(username));
+
+                } else {
+                    Toast.makeText(context, "you already in a group", Toast.LENGTH_SHORT).show();
                 }
+            } else if (isWordSearch) {
+                Intent intent = new Intent(context, WordActivity.class);
+                intent.putExtra("userName",username);
+                intent.putExtra("word", users.get(position));
+                context.startActivity(intent);
             }
         });
     }

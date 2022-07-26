@@ -1,14 +1,21 @@
 package com.edufire.dic3;
 
 import android.annotation.SuppressLint;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.view.GravityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.edufire.dic3.Models.User;
@@ -37,8 +44,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.userName.setText(users.get(position).getUsername());
         holder.password.setText(users.get(position).getPassword());
-        holder.limitRequestCounter.setText(String.valueOf(users.get(position).getLimitRequestCounter()));
-        holder.score.setText(String.valueOf(0));
+        holder.cardView.setOnClickListener(view -> {
+            Toast.makeText(context, users.get(position).getSearchWord().size() + " Words have", Toast.LENGTH_SHORT).show();
+        });
     }
 
     @Override
@@ -53,15 +61,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView userName, password, limitRequestCounter, score;
-        ImageView userImage;
+        TextView userName, password;
+        CardView cardView;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             userName = itemView.findViewById(R.id.UserName_adminPage);
             password = itemView.findViewById(R.id.Password_adminPage);
-            userImage = itemView.findViewById(R.id.UserImageView);
-            limitRequestCounter = itemView.findViewById(R.id.limitRequestCounter_adminPage);
-            score = itemView.findViewById(R.id.score_adminPage);
+            cardView = itemView.findViewById(R.id.admin_cardView);
         }
     }
 }
