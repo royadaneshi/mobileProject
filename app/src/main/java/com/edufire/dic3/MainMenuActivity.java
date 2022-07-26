@@ -40,12 +40,14 @@ public class MainMenuActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.userNameTextView);
         textView.setText(username);
 
+        Fragment frg = new FirstPageFragment();
         drawerLayout = findViewById(R.id.drawer);
         toolbar = findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+        loadFragment(frg);
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @SuppressLint("NonConstantResourceId")
