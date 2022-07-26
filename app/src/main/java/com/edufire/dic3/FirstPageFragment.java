@@ -1,5 +1,6 @@
 package com.edufire.dic3;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,6 +8,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.edufire.dic3.Models.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,9 +27,15 @@ public class FirstPageFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private String username;
+    private TextView score, connectStatus, premiumStatus;
 
     public FirstPageFragment() {
         // Required empty public constructor
+    }
+
+    public FirstPageFragment(String username) {
+        this.username = username;
     }
 
     /**
@@ -55,10 +65,24 @@ public class FirstPageFragment extends Fragment {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_first_page, container, false);
+        View view = inflater.inflate(R.layout.fragment_first_page, container, false);
+        score = view.findViewById(R.id.user_score);
+        connectStatus = view.findViewById(R.id.checkInternetTextView);
+        premiumStatus = view.findViewById(R.id.user_premium);
+        User user = User.getAllUsers().get(username);
+        if(user != null){
+            score.setText("You have " + user.getScore() + " score");
+            if(user.isPremium()){
+                premiumStatus.setText("You have premium account");
+            } else {
+                premiumStatus.setText("account not premium");
+            }
+        }
+        return view;
     }
 }

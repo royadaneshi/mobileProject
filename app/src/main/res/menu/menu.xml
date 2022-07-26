@@ -17,7 +17,7 @@
         android:icon="@drawable/group_add"
         android:title="Invite to Group" />
 
-    <item android:id="@+id/rq_groups"
+    <item android:id="@+id/request_groups"
         android:icon="@drawable/invitations"
         android:title="Group request" />
 

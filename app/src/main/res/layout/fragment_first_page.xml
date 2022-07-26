@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#56EDEDED"
     tools:context=".FirstPageFragment">
 
     <LinearLayout
@@ -20,6 +21,7 @@
             />
 
         <TextView
+            android:id="@+id/user_score"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:textSize="16sp"
@@ -34,6 +36,7 @@
             android:src="@drawable/dictionary_background"/>
 
         <TextView
+            android:id="@+id/user_premium"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="You're account not premium"

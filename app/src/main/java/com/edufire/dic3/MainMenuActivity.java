@@ -1,6 +1,5 @@
 package com.edufire.dic3;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -13,8 +12,6 @@ import androidx.fragment.app.FragmentTransaction;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,9 +24,9 @@ public class MainMenuActivity extends AppCompatActivity {
     ActionBarDrawerToggle toggle;
     Toolbar toolbar;
     NavigationView navigationView;
-    TextView txtSearch,txtGroups,txtPremium, txtPlayGame;
     User user;
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +37,7 @@ public class MainMenuActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.userNameTextView);
         textView.setText(username);
 
-        Fragment frg = new FirstPageFragment();
+        Fragment frg = new FirstPageFragment(username);
         drawerLayout = findViewById(R.id.drawer);
         toolbar = findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
@@ -49,111 +46,63 @@ public class MainMenuActivity extends AppCompatActivity {
         toggle.syncState();
         loadFragment(frg);
         navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @SuppressLint("NonConstantResourceId")
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-                Fragment fragment = null;
-                Intent intent;
-                switch (id){
-                    case R.id.search:
-                        intent = new Intent(MainMenuActivity.this, SearchActivity.class);
-                        intent.putExtra("userName",username);
-                        startActivity(intent);
-                        break;
-                    case R.id.play_game:
-                        intent = new Intent(MainMenuActivity.this, GameActivity.class);
-                        intent.putExtra("userName", username);
-                        startActivity(intent);
-                        break;
-                    case R.id.user_groups:
-                        fragment = new GroupsFragment(username);
-                        loadFragment(fragment);
-                        break;
-                    case R.id.add_groups:
-                        fragment = new GroupAddFragment(username);
-                        loadFragment(fragment);
-                        break;
-                    case R.id.rq_groups:
-                        fragment = new RequestGroupFragment(username);
-                        loadFragment(fragment);
-                        break;
-                    case R.id.word_search_in_database:
-                        fragment = new WordsInDatabaseFragment(username);
-                        loadFragment(fragment);
-                        break;
-                    case R.id.setting:
-                        fragment = new SettingFragment();
-                        loadFragment(fragment);
-                        break;
-                    case R.id.support:
-                        if(!user.isPremium()) {
-                            if (user.getScore() > 30) {
-                                user.setUserPremium(true);
-                                MainActivity.db.updateUserScore(username, user.getScore(), true);
-                                Toast.makeText(MainMenuActivity.this, "now you have premium account", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(MainMenuActivity.this, "You need " + (30 - user.getScore()) + " score", Toast.LENGTH_SHORT).show();
-                            }
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            Fragment fragment;
+            Intent intent;
+            switch (id){
+                case R.id.search:
+                    intent = new Intent(MainMenuActivity.this, SearchActivity.class);
+                    intent.putExtra("userName",username);
+                    startActivity(intent);
+                    break;
+                case R.id.play_game:
+                    intent = new Intent(MainMenuActivity.this, GameActivity.class);
+                    intent.putExtra("userName", username);
+                    startActivity(intent);
+                    break;
+                case R.id.user_groups:
+                    fragment = new GroupsFragment(username);
+                    loadFragment(fragment);
+                    break;
+                case R.id.add_groups:
+                    fragment = new GroupAddFragment(username);
+                    loadFragment(fragment);
+                    break;
+                case R.id.request_groups:
+                    fragment = new RequestGroupFragment(username);
+                    loadFragment(fragment);
+                    break;
+                case R.id.word_search_in_database:
+                    fragment = new WordsInDatabaseFragment(username);
+                    loadFragment(fragment);
+                    break;
+                case R.id.setting:
+                    fragment = new SettingFragment();
+                    loadFragment(fragment);
+                    break;
+                case R.id.support:
+                    if(!user.isPremium()) {
+                        if (user.getScore() > 30) {
+                            user.setUserPremium(true);
+                            MainActivity.db.updateUserScore(username, user.getScore(), true);
+                            Toast.makeText(MainMenuActivity.this, "now you have premium account", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(MainMenuActivity.this, "your account already premium", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainMenuActivity.this, "You need " + (30 - user.getScore()) + " score", Toast.LENGTH_SHORT).show();
                         }
-                        break;
-                    case R.id.logout:
-                        intent = new Intent(MainMenuActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        break;
-                    default:
-                        return true;
-                }
-                return true;
+                    } else {
+                        Toast.makeText(MainMenuActivity.this, "your account already premium", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case R.id.logout:
+                    intent = new Intent(MainMenuActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    break;
+                default:
+                    return true;
             }
+            return true;
         });
-
-//        txtSearch = findViewById(R.id.txt_menu_search);
-//        txtGroups = findViewById(R.id.txt_menu_groups);
-//        txtPremium = findViewById(R.id.txt_menu_premium);
-//        txtPlayGame = findViewById(R.id.playGame);
-
-//
-//        user = User.getAllUsers().get(username);
-//
-//        txtSearch.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(MainMenuActivity.this, SearchActivity.class);
-//                intent.putExtra("username",username);
-//                startActivity(intent);
-//            }
-//        });
-//
-//        txtPremium.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(MainMenuActivity.this, PremiumActivity.class);
-//                intent.putExtra("username", username);
-//                startActivity(intent);
-//            }
-//        });
-//
-//        txtPlayGame.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(MainMenuActivity.this, GameActivity.class);
-//                intent.putExtra("username", username);
-//                startActivity(intent);
-//            }
-//        });
-//
-//        txtGroups.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(MainMenuActivity.this, GroupActivity.class);
-//                intent.putExtra("username", username);
-//                startActivity(intent);
-//            }
-//        });
     }
 
     private void loadFragment(Fragment fragment) {
