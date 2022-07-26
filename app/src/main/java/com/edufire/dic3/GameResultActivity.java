@@ -13,6 +13,7 @@ import com.edufire.dic3.Models.User;
 public class GameResultActivity extends AppCompatActivity {
 
     private static String username;
+    private TextView time;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -27,6 +28,7 @@ public class GameResultActivity extends AppCompatActivity {
         final int getCorrectAnswer = getIntent().getIntExtra("correct", 0);
         final int getIncorrectAnswer = getIntent().getIntExtra("incorrect", 0);
         username = getIntent().getStringExtra("userName");
+        time = findViewById(R.id.time_result);
 
         User user = User.getAllUsers().get(username);
         if(3 * getCorrectAnswer - getIncorrectAnswer > 0)
@@ -34,6 +36,16 @@ public class GameResultActivity extends AppCompatActivity {
                 user.increaseScore(3 * getCorrectAnswer - getIncorrectAnswer);
                 MainActivity.db.updateUserScore(username, user.getScore(), user.isPremium());
             }
+
+        String totalTimeInMin = getIntent().getStringExtra("totalTimeInMin");
+        String seconds = getIntent().getStringExtra("seconds");
+
+        if(totalTimeInMin != null && totalTimeInMin.length() == 1)
+            totalTimeInMin = "0" + totalTimeInMin;
+        if(seconds != null && seconds.length() == 1)
+            seconds = "0" + seconds;
+
+        time.setText("Time " + totalTimeInMin + ":" + seconds);
 
         correctAnswer.setText("Correct Answer : " + getCorrectAnswer);
         incorrectAnswer.setText("Wrong Answer : " + getIncorrectAnswer);

@@ -162,8 +162,12 @@ public class GameActivity extends AppCompatActivity {
                     quizTimer.purge();
                     quizTimer.cancel();
 
-                    Intent intent = new Intent(GameActivity.this, MainMenuActivity.class);
+                    Intent intent = new Intent(GameActivity.this, GameResultActivity.class);
+                    intent.putExtra("correct", getCorrectAnswers());
+                    intent.putExtra("incorrect", getIncorrectAnswers());
                     intent.putExtra("userName", username);
+                    intent.putExtra("totalTimeInMin", String.valueOf(totalTimeInMin));
+                    intent.putExtra("seconds", String.valueOf(seconds));
                     startActivity(intent);
                     finish();
                 }
@@ -220,6 +224,8 @@ public class GameActivity extends AppCompatActivity {
             intent.putExtra("correct", getCorrectAnswers());
             intent.putExtra("incorrect", getIncorrectAnswers());
             intent.putExtra("userName", username);
+            intent.putExtra("totalTimeInMin", String.valueOf(totalTimeInMin));
+            intent.putExtra("seconds", String.valueOf(seconds));
             startActivity(intent);
             finish();
         }
