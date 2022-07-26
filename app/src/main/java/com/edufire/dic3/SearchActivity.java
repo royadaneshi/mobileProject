@@ -98,6 +98,7 @@ public class SearchActivity extends AppCompatActivity {
                         if (baseLanguage.equals(targetLanguage)){
                             Intent intent = new Intent(SearchActivity.this,TranslationActivity.class);
                             intent.putExtra("text",text.getText().toString());
+                            intent.putExtra("username",user.getUsername());
                             startActivity(intent);
                         }else{
                             translation.setVisibility(View.VISIBLE);
