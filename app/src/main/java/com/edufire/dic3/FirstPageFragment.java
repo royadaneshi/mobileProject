@@ -1,8 +1,14 @@
 package com.edufire.dic3;
 
+
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -83,6 +89,18 @@ public class FirstPageFragment extends Fragment {
                 premiumStatus.setText("account not premium");
             }
         }
+        ConnectivityManager connMgr = (ConnectivityManager) getActivity()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            connectStatus.setText("Online");
+        } else {
+            connectStatus.setText("No internet is detected for a better experience please connect to internet");
+        }
         return view;
     }
+
+
 }
