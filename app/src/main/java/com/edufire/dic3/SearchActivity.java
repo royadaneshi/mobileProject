@@ -46,7 +46,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        user = User.getAllUsers().get(getIntent().getStringExtra("username"));
+        user = User.getAllUsers().get(getIntent().getStringExtra("userName"));
 
         spinnerFrom = findViewById(R.id.spinner_search_from);
         spinnerTarget = findViewById(R.id.spinner_search_target);
