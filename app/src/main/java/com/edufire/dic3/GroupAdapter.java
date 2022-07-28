@@ -13,9 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-import com.edufire.dic3.Models.Word;
-
 import java.util.ArrayList;
 import java.util.List;
 

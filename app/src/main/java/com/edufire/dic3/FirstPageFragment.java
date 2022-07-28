@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.edufire.dic3.Models.User;
 
@@ -97,7 +98,8 @@ public class FirstPageFragment extends Fragment {
         if (networkInfo != null && networkInfo.isConnected()) {
             connectStatus.setText("Online");
         } else {
-            connectStatus.setText("No internet is detected for a better experience please connect to internet");
+            connectStatus.setText("Offline");
+            Toast.makeText(getActivity(), "please connect to internet", Toast.LENGTH_SHORT).show();
         }
         return view;
     }

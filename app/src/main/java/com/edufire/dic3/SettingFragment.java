@@ -1,12 +1,20 @@
 package com.edufire.dic3;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.edufire.dic3.Models.User;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,9 +31,14 @@ public class SettingFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private String username;
 
     public SettingFragment() {
         // Required empty public constructor
+    }
+
+    public SettingFragment(String username) {
+        this.username = username;
     }
 
     /**
@@ -59,6 +72,45 @@ public class SettingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_setting, container, false);
+        EditText oldPass, newPass;
+        AppCompatButton changePass, delete;
+        View view = inflater.inflate(R.layout.fragment_setting, container, false);
+        oldPass = view.findViewById(R.id.pass_EditText);
+        newPass = view.findViewById(R.id.newPass_EditText);
+        changePass = view.findViewById(R.id.changePassword);
+        delete = view.findViewById(R.id.deleteAccount);
+        User user = User.getAllUsers().get(username);
+        if (user != null) {
+            changePass.setOnClickListener(view1 -> {
+                if (user.getPassword() != null && user.getPassword().equals(oldPass.getText().toString())) {
+                    if (newPass.getText().toString().isEmpty()) {
+                        Toast.makeText(getActivity(), "Enter new password", Toast.LENGTH_SHORT).show();
+                    } else {
+                        String nPass = newPass.getText().toString();
+                        Toast.makeText(getActivity(), "Password Change successful", Toast.LENGTH_SHORT).show();
+                        MainActivity.db.updatePassword(username, nPass);
+                        user.setPassword(nPass);
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Wrong Password entered", Toast.LENGTH_SHORT).show();
+                }
+            });
+            delete.setOnClickListener(view12 -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+                builder.setMessage("Are you sure ?");
+                builder.setTitle("Delete Account");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Yes", (dialog, which) -> {
+                    Toast.makeText(getActivity(), "Your account deleted", Toast.LENGTH_SHORT).show();
+                    MainActivity.db.deleteUser(username);
+                    User.deleteUser(username);
+                    startActivity(new Intent(getActivity(), MainActivity.class));
+                });
+                builder.setNegativeButton("No", (dialog, which) -> dialog.cancel());
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            });
+        }
+        return view;
     }
 }

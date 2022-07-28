@@ -15,6 +15,10 @@ public class User {
 
     static HashMap<String, User> allUsers = new HashMap<>();
 
+    public static void deleteUser(String username){
+        allUsers.remove(username);
+    }
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;

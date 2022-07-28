@@ -82,7 +82,7 @@ public class MainMenuActivity extends AppCompatActivity {
                     loadFragment(fragment);
                     break;
                 case R.id.setting:
-                    fragment = new SettingFragment();
+                    fragment = new SettingFragment(username);
                     loadFragment(fragment);
                     break;
                 case R.id.support:

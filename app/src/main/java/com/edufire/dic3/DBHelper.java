@@ -47,7 +47,7 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public void insertUserInformation(String username, String password , int score ,int limitRequestCounter, boolean isPremium, String premiumCode){
+    public void insertUserInformation(String username, String password, int score, int limitRequestCounter, boolean isPremium, String premiumCode) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues userValues = new ContentValues();
         userValues.put("username", username);
@@ -59,7 +59,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.insert(Table1, null, userValues);
     }
 
-    public void insertTeammateRequest(String usernameOfSender, String usernameOfReceiver){
+    public void insertTeammateRequest(String usernameOfSender, String usernameOfReceiver) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues requestValues = new ContentValues();
         requestValues.put("usernameOfSender", usernameOfSender);
@@ -67,7 +67,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.insert(Table2, null, requestValues);
     }
 
-    public void insertGroups(String firstUsername, String secondUsername){
+    public void insertGroups(String firstUsername, String secondUsername) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues groupValues = new ContentValues();
         groupValues.put("firstUsername", firstUsername);
@@ -75,7 +75,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.insert(Table3, null, groupValues);
     }
 
-    public void insertWordInformation(String user, String word , String meaning1 , String meaning2 , String meaning3 , String audioLink, String description , String examples, String roleOfWordInSentence, String synonyms1, String synonyms2, String synonyms3, String reqHour) {
+    public void insertWordInformation(String user, String word, String meaning1, String meaning2, String meaning3, String audioLink, String description, String examples, String roleOfWordInSentence, String synonyms1, String synonyms2, String synonyms3, String reqHour) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues wordValues = new ContentValues();
         wordValues.put("user", user);
@@ -94,21 +94,40 @@ public class DBHelper extends SQLiteOpenHelper {
         db.insert(Table4, null, wordValues);
     }
 
-    public void deleteData(String user, String password, String word){
-        if(getUserSearchWordFromDatabase(user) != null) {
-            SQLiteDatabase db = getWritableDatabase();
-            db.execSQL("DELETE FROM WeatherInfo WHERE user " + "=\"" + user + "\" AND password " + "=\"" + password + "\" AND word " + "=\"" + word + "\";");
-        }
+    public void deleteUser(String user) {
+        deleteUserFromTable1(user);
+        deleteUserFromTable2(user);
+        deleteUserFromTable3(user);
+        deleteUserFromTable4(user);
     }
 
-    public void deleteTeammateRequest(String usernameOfSender, String usernameOfReceiver){
+    public void deleteUserFromTable1(String username) {
         SQLiteDatabase db = this.getWritableDatabase();
-        if(isTeammateRequestExistsInDatabase(usernameOfSender, usernameOfReceiver)) {
-            db.execSQL("DELETE FROM TeammateRequest WHERE usernameOfSender " + "=\"" + usernameOfSender + "\" AND usernameOfReceiver " + "=\"" + usernameOfReceiver + "\";");
-        }
-        if(isTeammateRequestExistsInDatabase(usernameOfReceiver, usernameOfSender)) {
-            db.execSQL("DELETE FROM TeammateRequest WHERE usernameOfSender " + "=\"" + usernameOfReceiver + "\" AND usernameOfReceiver " + "=\"" + usernameOfSender + "\";");
-        }
+        db.execSQL("DELETE FROM UserInformation WHERE username " + "=\"" + username + "\";");
+    }
+
+    public void deleteUserFromTable2(String username) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM TeammateRequest WHERE usernameOfSender " + "=\"" + username + "\";");
+        db.execSQL("DELETE FROM TeammateRequest WHERE usernameOfReceiver " + "=\"" + username + "\";");
+    }
+
+    public void deleteUserFromTable3(String username) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM Groups WHERE firstUsername " + "=\"" + username + "\";");
+        db.execSQL("DELETE FROM Groups WHERE secondUsername " + "=\"" + username + "\";");
+    }
+
+    public void deleteUserFromTable4(String username) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM WordSearch WHERE user " + "=\"" + username + "\";");
+    }
+
+
+    public void deleteTeammateRequest(String usernameOfSender, String usernameOfReceiver) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM TeammateRequest WHERE usernameOfSender " + "=\"" + usernameOfSender + "\" AND usernameOfReceiver " + "=\"" + usernameOfReceiver + "\";");
+        db.execSQL("DELETE FROM TeammateRequest WHERE usernameOfSender " + "=\"" + usernameOfReceiver + "\" AND usernameOfReceiver " + "=\"" + usernameOfSender + "\";");
     }
 
     public ArrayList<Word> getUserSearchWordFromDatabase(String user) {
@@ -138,7 +157,7 @@ public class DBHelper extends SQLiteOpenHelper {
             do {
                 User user = new User(cursorCourses.getString(0), cursorCourses.getString(1));
                 ArrayList<Word> searched = getUserSearchWordFromDatabase(user.getUsername());
-                if(searched != null)
+                if (searched != null)
                     user.setSearchWord(searched);
                 user.setLimitRequestCounter(cursorCourses.getInt(3));
                 user.setScore(cursorCourses.getInt(2));
@@ -149,7 +168,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cursorCourses.close();
     }
 
-    public ArrayList<String> getInvitation(String receiver){
+    public ArrayList<String> getInvitation(String receiver) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursorCourses = db.rawQuery("SELECT * FROM " + Table2, null);
 
@@ -157,7 +176,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         if (cursorCourses.moveToFirst()) {
             do {
-                if(cursorCourses.getString(1).equals(receiver)){
+                if (cursorCourses.getString(1).equals(receiver)) {
                     sender.add(cursorCourses.getString(0));
                 }
             } while (cursorCourses.moveToNext());
@@ -166,7 +185,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return sender;
     }
 
-    public ArrayList<String> getGroupCommon(String username){
+    public ArrayList<String> getGroupCommon(String username) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursorCourses = db.rawQuery("SELECT * FROM " + Table3, null);
 
@@ -174,9 +193,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
         if (cursorCourses.moveToFirst()) {
             do {
-                if(cursorCourses.getString(1).equals(username)){
+                if (cursorCourses.getString(1).equals(username)) {
                     inSameGroup.add(cursorCourses.getString(0));
-                } else if(cursorCourses.getString(0).equals(username)){
+                } else if (cursorCourses.getString(0).equals(username)) {
                     inSameGroup.add(cursorCourses.getString(1));
                 }
             } while (cursorCourses.moveToNext());
@@ -192,7 +211,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         if (cursorCourses.moveToFirst()) {
             do {
-                if(cursorCourses.getString(0).equals(sender) && cursorCourses.getString(1).equals(receiver)){
+                if (cursorCourses.getString(0).equals(sender) && cursorCourses.getString(1).equals(receiver)) {
                     return true;
                 }
             } while (cursorCourses.moveToNext());
@@ -201,13 +220,13 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public boolean isWordSearchExist(String username, String word){
+    public boolean isWordSearchExist(String username, String word) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursorCourses = db.rawQuery("SELECT * FROM " + Table4, null);
 
         if (cursorCourses.moveToFirst()) {
             do {
-                if(cursorCourses.getString(0).equals(username) && cursorCourses.getString(1).equalsIgnoreCase(word)){
+                if (cursorCourses.getString(0).equals(username) && cursorCourses.getString(1).equalsIgnoreCase(word)) {
                     return true;
                 }
             } while (cursorCourses.moveToNext());
@@ -216,16 +235,16 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public boolean IsInSameGroup(String sender, String receiver){
+    public boolean IsInSameGroup(String sender, String receiver) {
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursorCourses = db.rawQuery("SELECT * FROM " + Table3, null);
 
         if (cursorCourses.moveToFirst()) {
             do {
-                if(cursorCourses.getString(0).equals(sender) && cursorCourses.getString(1).equals(receiver)){
+                if (cursorCourses.getString(0).equals(sender) && cursorCourses.getString(1).equals(receiver)) {
                     return true;
-                } else if(cursorCourses.getString(1).equals(sender) && cursorCourses.getString(0).equals(receiver)){
+                } else if (cursorCourses.getString(1).equals(sender) && cursorCourses.getString(0).equals(receiver)) {
                     return true;
                 }
             } while (cursorCourses.moveToNext());
@@ -234,11 +253,25 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public void updateUserScore(String username, int score,boolean isPremium){
+    public void updateUserScore(String username, int score, boolean isPremium) {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("score", score);
         contentValues.put("isPremium", isPremium);
+        db.update(Table1, contentValues, "username = '" + username + "'", null);
+    }
+
+    public void updatePassword(String username, String password){
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("password", password);
+        db.update(Table1, contentValues, "username = '" + username + "'", null);
+    }
+
+    public void updateLimitRequest(String username, int limitRequestCounter){
+        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("limitRequestCounter", limitRequestCounter);
         db.update(Table1, contentValues, "username = '" + username + "'", null);
     }
 
