@@ -1,0 +1,4 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen tools:override="true" name="design_navigation_separator_vertical_padding">20dp</dimen>
+</resources>

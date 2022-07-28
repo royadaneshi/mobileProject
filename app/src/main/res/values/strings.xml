@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">dic3</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_register">register</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="user_name">User Name :</string>
+    <string name="password">Password :</string>
+    <string name="limit_request_counter">limit request counter :</string>
+    <string name="score">Score :</string>
+    <string name="limit">limit</string>
+    <string name="user_image" />
+    <string name="number_of_users">number of users :</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="hi">Hi</string>
+    <string name="hello">Hello</string>
+
+    <string-array name="languages">
+        <item>English</item>
+        <item>Afrikaans</item>
+        <item>Arabic</item>
+        <item>Belarusian</item>
+        <item>Czech</item>
+        <item>Hindi</item>
+    </string-array>
+</resources>

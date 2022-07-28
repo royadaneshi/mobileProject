@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<group android:checkableBehavior="single" >
+
+    <item android:id="@+id/home_menu"
+        android:icon="@drawable/ic_baseline_home_24"
+        android:title="Home" />
+
+    <item android:id="@+id/search"
+        android:icon="@drawable/search"
+        android:title="Search" />
+
+    <item android:id="@+id/play_game"
+        android:icon="@drawable/ic_baseline_games_24"
+        android:title="Play a Game" />
+
+    <item android:id="@+id/user_groups"
+        android:icon="@drawable/group"
+        android:title="Groups" />
+
+    <item android:id="@+id/add_groups"
+        android:icon="@drawable/group_add"
+        android:title="Invite to Group" />
+
+    <item android:id="@+id/request_groups"
+        android:icon="@drawable/invitations"
+        android:title="Group request" />
+
+    <item android:id="@+id/word_search_in_database"
+        android:icon="@drawable/ic_baseline_apps_words_24"
+        android:title="Words" />
+
+</group>
+    <item android:title="" >
+        <menu >
+            <group android:checkableBehavior="single" >
+                <item android:id="@+id/setting"
+                    android:icon="@drawable/setting"
+                    android:title="Setting" />
+
+                <item android:id="@+id/support"
+                    android:icon="@drawable/support"
+                    android:title="Premium" />
+
+                <item android:id="@+id/logout"
+                    android:icon="@drawable/exit"
+                    android:title="Log out" />
+            </group>
+        </menu>
+    </item>
+</menu>
