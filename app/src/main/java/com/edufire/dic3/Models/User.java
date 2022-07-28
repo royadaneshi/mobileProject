@@ -1,6 +1,8 @@
 package com.edufire.dic3.Models;
 
 
+import com.edufire.dic3.MainActivity;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -60,6 +62,7 @@ public class User {
 
     public void increaseLimitRequestCounter() {
         limitRequestCounter++;
+        MainActivity.db.updateLimitRequest(username, limitRequestCounter);
     }
 
 
