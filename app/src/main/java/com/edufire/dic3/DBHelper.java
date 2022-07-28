@@ -12,6 +12,7 @@ import com.edufire.dic3.Models.User;
 import com.edufire.dic3.Models.Word;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DBName = "Dictionary";
@@ -121,17 +122,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     String audioLink = cursorCourses.getString(5);
                     String description = cursorCourses.getString(6);
                     String roleOfWordInSentence = cursorCourses.getString(8);
-                    ArrayList<String> examples = new ArrayList<>();
-                    examples.add(cursorCourses.getString(7));
-                    ArrayList<String> meaning = new ArrayList<>();
-                    ArrayList<String> synonyms = new ArrayList<>();
-                    for (int i = 0; i < 3; i++) {
-                        if(cursorCourses.getString(2 + i) != null)
-                            meaning.add(cursorCourses.getString(2 + i));
-                        if(cursorCourses.getString(9 + i) != null)
-                            synonyms.add(cursorCourses.getString(9 + i));
-                    }
-                    UserSearchWords.add(new Word(word, meaning, audioLink, description, examples, roleOfWordInSentence, synonyms));
+                    UserSearchWords.add(new Word(word, new ArrayList<>(), audioLink, description, new ArrayList<>(), roleOfWordInSentence, new ArrayList<>()));
                 }
             } while (cursorCourses.moveToNext());
         }
@@ -210,6 +201,21 @@ public class DBHelper extends SQLiteOpenHelper {
         return false;
     }
 
+    public boolean isWordSearchExist(String username, String word){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursorCourses = db.rawQuery("SELECT * FROM " + Table4, null);
+
+        if (cursorCourses.moveToFirst()) {
+            do {
+                if(cursorCourses.getString(0).equals(username) && cursorCourses.getString(1).equalsIgnoreCase(word)){
+                    return true;
+                }
+            } while (cursorCourses.moveToNext());
+        }
+        cursorCourses.close();
+        return false;
+    }
+
     public boolean IsInSameGroup(String sender, String receiver){
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -220,22 +226,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 if(cursorCourses.getString(0).equals(sender) && cursorCourses.getString(1).equals(receiver)){
                     return true;
                 } else if(cursorCourses.getString(1).equals(sender) && cursorCourses.getString(0).equals(receiver)){
-                    return true;
-                }
-            } while (cursorCourses.moveToNext());
-        }
-        cursorCourses.close();
-        return false;
-    }
-
-    public boolean IsWorldSearchExist(String username, String word){
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursorCourses = db.rawQuery("SELECT * FROM " + Table4, null);
-
-        if (cursorCourses.moveToFirst()) {
-            do {
-                if(cursorCourses.getString(0).equals(username) && cursorCourses.getString(1).equals(word)){
                     return true;
                 }
             } while (cursorCourses.moveToNext());

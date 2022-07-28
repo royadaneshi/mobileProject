@@ -91,14 +91,14 @@ public class SearchActivity extends AppCompatActivity {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View view) {
-                if (user.canUserRequest()){
+                if (user != null && user.canUserRequest()){
                     if (text.getText().toString().equals("")){
                         Toast.makeText(getParent(),"please fill text field", Toast.LENGTH_SHORT).show();
                     } else {
                         if (baseLanguage.equals(targetLanguage)){
                             Intent intent = new Intent(SearchActivity.this,TranslationActivity.class);
                             intent.putExtra("text",text.getText().toString());
-                            intent.putExtra("username",user.getUsername());
+                            intent.putExtra("userName",user.getUsername());
                             startActivity(intent);
                         }else{
                             translation.setVisibility(View.VISIBLE);
@@ -110,9 +110,9 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 } else{
                     Toast.makeText(SearchActivity.this,"You have reached your limit please buy premium plan to continue",Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(SearchActivity.this,PremiumActivity.class);
-                    intent.putExtra("username",user.getUsername());
-                    startActivity(intent);
+//                    Intent intent = new Intent(SearchActivity.this,PremiumActivity.class);
+//                    intent.putExtra("username",user.getUsername());
+//                    startActivity(intent);
                 }
 
             }

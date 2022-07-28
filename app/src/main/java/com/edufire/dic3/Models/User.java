@@ -34,6 +34,10 @@ public class User {
         return isPremium || (!isPremium && limitRequestCounter <= 10);
     }
 
+    public void addWordSearch(Word word1){
+        searchWord.add(word1);
+    }
+
     public int getLimitRequestCounter() {
         return limitRequestCounter;
     }

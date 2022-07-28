@@ -86,6 +86,10 @@ public class WordsInDatabaseFragment extends Fragment {
                     words.add(word.getWord());
             }
         }
+        for(Word word : MainActivity.db.getUserSearchWordFromDatabase(username)){
+            if(!words.contains(word.getWord()))
+                words.add(word.getWord());
+        }
         groupAdapter.setGroups(words);
 
         return view;

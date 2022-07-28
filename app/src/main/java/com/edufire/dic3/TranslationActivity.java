@@ -16,6 +16,8 @@ import com.edufire.dic3.Models.APIResponse;
 import com.edufire.dic3.Models.Definitions;
 import com.edufire.dic3.Models.Meanings;
 import com.edufire.dic3.Models.Phonetics;
+import com.edufire.dic3.Models.User;
+import com.edufire.dic3.Models.Word;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -33,12 +35,14 @@ public class TranslationActivity extends AppCompatActivity {
     phoneticsHandler phoneticsAdapter;
     RecyclerView meaningsRecycleView;
     MeaningsAdapter meaningsAdapter;
+    String username;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_translation);
+        username = getIntent().getStringExtra("userName");
         text = getIntent().getExtras().getString("text");
         word = findViewById(R.id.txt_translation_word);
         phoneticsRecycleView = findViewById(R.id.rv_translation_phonetics);
@@ -63,6 +67,13 @@ public class TranslationActivity extends AppCompatActivity {
             meaningsRecycleView.setLayoutManager(new LinearLayoutManager(TranslationActivity.this));
             meaningsAdapter = new MeaningsAdapter(TranslationActivity.this,meaningsList);
             meaningsRecycleView.setAdapter(meaningsAdapter);
+            if(!MainActivity.db.isWordSearchExist(username,apiResponse.getWord())) {
+                Word word = getWord(apiResponse);
+                User user = User.getAllUsers().get(username);
+                if(user != null){
+                    user.addWordSearch(word);
+                }
+            }
 //            showData(apiResponse);
         }
 
@@ -71,6 +82,15 @@ public class TranslationActivity extends AppCompatActivity {
             Toast.makeText(TranslationActivity.this, "Error!", Toast.LENGTH_SHORT).show();
         }
     };
+
+    public Word getWord(APIResponse apiResponse){
+        List<Meanings> meaningsList = apiResponse.getMeanings();
+        List<Definitions> definitionsList = meaningsList.get(0).getDefinitions();
+        List<Phonetics> phonetics = apiResponse.getPhonetics();
+        Word word = new Word(apiResponse.getWord(), new ArrayList<>(), phonetics.get(0).getAudio(), definitionsList.get(0).getDefinition(), new ArrayList<>(), meaningsList.get(0).getPartOfSpeech(), new ArrayList<>());
+        MainActivity.db.insertWordInformation(username, apiResponse.getWord(), "", "", "", word.getAudioLink(), word.getDescription(), "", word.getRoleOfWordInSentence(), "", "", "", "");
+        return word;
+    }
 
     private static void showData(APIResponse apiResponse) {
         System.out.println("----------------------------------------------------------------------------------------------------");
