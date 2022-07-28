@@ -158,7 +158,7 @@ public class GameActivity extends AppCompatActivity {
                     seconds = 0;
                 }
 
-                if(totalTimeInMin == 3){
+                if(totalTimeInMin == 20){
                     quizTimer.purge();
                     quizTimer.cancel();
 
