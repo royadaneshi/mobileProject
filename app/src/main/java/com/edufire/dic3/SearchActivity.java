@@ -3,6 +3,7 @@ package com.edufire.dic3;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,7 +24,6 @@ import com.google.firebase.ml.naturallanguage.FirebaseNaturalLanguage;
 import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslateLanguage;
 import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslator;
 import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslatorOptions;
-
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -80,33 +80,38 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
-        submit.setOnClickListener(view -> {
-            if (user != null && user.canUserRequest()){
-                if (text.getText().toString().equals("")){
-                    Toast.makeText(getParent(),"please fill text field", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (baseLanguage.equals(targetLanguage)){
-                        Intent intent = new Intent(SearchActivity.this,TranslationActivity.class);
-                        intent.putExtra("text",text.getText().toString());
-                        intent.putExtra("userName",user.getUsername());
-                        startActivity(intent);
-                    }else{
-                        translation.setVisibility(View.VISIBLE);
-                        String response = translateText(getLanguageCode(baseLanguage.toString()),getLanguageCode(targetLanguage),text.getText().toString());
-                        response.replace("\r","");
-                        translation.setText(response);
+        submit.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onClick(View view) {
+                if (user != null && user.canUserRequest()){
+                    if (text.getText().toString().equals("")){
+                        Toast.makeText(getParent(),"please fill text field", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (baseLanguage.equals(targetLanguage)){
+                            Intent intent = new Intent(SearchActivity.this,TranslationActivity.class);
+                            intent.putExtra("text",text.getText().toString());
+                            intent.putExtra("userName",user.getUsername());
+                            startActivity(intent);
+                        }else{
+//                            String response = translateText(getLanguageCode(baseLanguage.toString()),getLanguageCode(targetLanguage),text.getText().toString());
+                             translateText(getLanguageCode(baseLanguage.toString()),getLanguageCode(targetLanguage),text.getText().toString());
+                        }
+                        user.increaseLimitRequestCounter();
                     }
-                    user.increaseLimitRequestCounter();
+                } else{
+                    Toast.makeText(SearchActivity.this,"You have reached your limit please buy premium plan to continue",Toast.LENGTH_LONG).show();
+//                    Intent intent = new Intent(SearchActivity.this,PremiumActivity.class);
+//                    intent.putExtra("username",user.getUsername());
+//                    startActivity(intent);
                 }
-            } else{
-                Toast.makeText(SearchActivity.this,"You have reached your limit please buy premium plan to continue",Toast.LENGTH_LONG).show();
-            }
 
+            }
         });
 
     }
 
-    public String translateText(int fromLanguageCode, int toLanguageCode, String source) {
+    public void translateText(int fromLanguageCode, int toLanguageCode, String source) {
         final String[] answer = {""};
         FirebaseTranslatorOptions options = new FirebaseTranslatorOptions.Builder()
                 .setSourceLanguage(fromLanguageCode)
@@ -120,7 +125,9 @@ public class SearchActivity extends AppCompatActivity {
                 translator.translate(source).addOnSuccessListener(new OnSuccessListener<String>() {
                     @Override
                     public void onSuccess(String s) {
-                        System.out.println(s);
+//                        System.out.println(s);
+                        translation.setText(s);
+                        translation.setVisibility(View.VISIBLE);
                         answer[0] = s;
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -136,8 +143,6 @@ public class SearchActivity extends AppCompatActivity {
                 System.out.println("Fail to download the model!++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             }
         });
-
-        return answer[0];
     }
 
     public int getLanguageCode(String language) {
