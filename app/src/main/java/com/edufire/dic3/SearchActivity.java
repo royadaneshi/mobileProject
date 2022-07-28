@@ -3,10 +3,8 @@ package com.edufire.dic3;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,10 +15,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.edufire.dic3.Models.APIResponse;
-import com.edufire.dic3.Models.Definitions;
-import com.edufire.dic3.Models.Meanings;
-import com.edufire.dic3.Models.Phonetics;
 import com.edufire.dic3.Models.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,7 +24,6 @@ import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslateLanguag
 import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslator;
 import com.google.firebase.ml.naturallanguage.translate.FirebaseTranslatorOptions;
 
-import java.util.List;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -87,35 +80,28 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
-        submit.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onClick(View view) {
-                if (user != null && user.canUserRequest()){
-                    if (text.getText().toString().equals("")){
-                        Toast.makeText(getParent(),"please fill text field", Toast.LENGTH_SHORT).show();
-                    } else {
-                        if (baseLanguage.equals(targetLanguage)){
-                            Intent intent = new Intent(SearchActivity.this,TranslationActivity.class);
-                            intent.putExtra("text",text.getText().toString());
-                            intent.putExtra("userName",user.getUsername());
-                            startActivity(intent);
-                        }else{
-                            translation.setVisibility(View.VISIBLE);
-                            String response = translateText(getLanguageCode(baseLanguage.toString()),getLanguageCode(targetLanguage),text.getText().toString());
-                            response.replace("\r","");
-                            translation.setText(response);
-                        }
-                        user.increaseLimitRequestCounter();
+        submit.setOnClickListener(view -> {
+            if (user != null && user.canUserRequest()){
+                if (text.getText().toString().equals("")){
+                    Toast.makeText(getParent(),"please fill text field", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (baseLanguage.equals(targetLanguage)){
+                        Intent intent = new Intent(SearchActivity.this,TranslationActivity.class);
+                        intent.putExtra("text",text.getText().toString());
+                        intent.putExtra("userName",user.getUsername());
+                        startActivity(intent);
+                    }else{
+                        translation.setVisibility(View.VISIBLE);
+                        String response = translateText(getLanguageCode(baseLanguage.toString()),getLanguageCode(targetLanguage),text.getText().toString());
+                        response.replace("\r","");
+                        translation.setText(response);
                     }
-                } else{
-                    Toast.makeText(SearchActivity.this,"You have reached your limit please buy premium plan to continue",Toast.LENGTH_LONG).show();
-//                    Intent intent = new Intent(SearchActivity.this,PremiumActivity.class);
-//                    intent.putExtra("username",user.getUsername());
-//                    startActivity(intent);
+                    user.increaseLimitRequestCounter();
                 }
-
+            } else{
+                Toast.makeText(SearchActivity.this,"You have reached your limit please buy premium plan to continue",Toast.LENGTH_LONG).show();
             }
+
         });
 
     }

@@ -37,7 +37,7 @@ public class User {
     }
 
     public boolean canUserRequest() {
-        return isPremium || (!isPremium && limitRequestCounter <= 10);
+        return isPremium || (!isPremium && limitRequestCounter < 10);
     }
 
     public void addWordSearch(Word word1){
